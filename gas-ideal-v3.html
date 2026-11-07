@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="id"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="author" content="Raudhatul Jannah">
+<meta name="description" content="Virtual Gas Lab: media ajar interaktif Gas Ideal untuk mata kuliah Kimia Fisika, Program Studi Pendidikan Kimia, 2026.">
+<title>Virtual Gas Lab: Gas Ideal</title>
+<style>
+:root{--bg:#f3f6f4;--card:#fff;--tx:#14231f;--mut:#566a63;--bd:#cfdcd6;--ac:#0b7a6b;--ac2:#c2410c;--cv:#fbfdfc;--grid:#dbe5e0;--g1:#2563eb;--g2:#dc2626;--g3:#15803d;--ok:#15803d;--bad:#b91c1c;--okbg:#e7f6ec;--badbg:#fdeaea;--onac:#fff}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0d1714;--card:#15241f;--tx:#e6f2ee;--mut:#9bb3aa;--bd:#2a4238;--ac:#35d6bd;--ac2:#ffa45c;--cv:#0a120f;--grid:#21352d;--g1:#6ea8ff;--g2:#ff7a7a;--g3:#52d68a;--ok:#4ade80;--bad:#ff8a8a;--okbg:#10301f;--badbg:#3a1616;--onac:#06231d}}
+:root[data-theme="dark"]{--bg:#0d1714;--card:#15241f;--tx:#e6f2ee;--mut:#9bb3aa;--bd:#2a4238;--ac:#35d6bd;--ac2:#ffa45c;--cv:#0a120f;--grid:#21352d;--g1:#6ea8ff;--g2:#ff7a7a;--g3:#52d68a;--ok:#4ade80;--bad:#ff8a8a;--okbg:#10301f;--badbg:#3a1616;--onac:#06231d}
+*{box-sizing:border-box}
+html{scroll-padding-top:60px}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.6 "Segoe UI",system-ui,Roboto,sans-serif;-webkit-text-size-adjust:100%}
+.w{max-width:1020px;margin:0 auto;padding:16px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-bottom:max(24px,env(safe-area-inset-bottom,0px))}
+.hd{display:flex;gap:12px;align-items:flex-start;justify-content:space-between;padding-top:env(safe-area-inset-top,0px)}
+h1{font:800 clamp(26px,5vw,40px)/1.15 Georgia,"Times New Roman",serif;margin:8px 0 4px}
+h2{font:700 21px/1.3 Georgia,serif;margin:0 0 8px}
+h3{font-size:16px;margin:14px 0 4px;color:var(--ac)}
+.sub{color:var(--mut);margin:0 0 12px}
+.tb{font:600 13px inherit;font-family:inherit;border:1px solid var(--bd);background:var(--card);color:var(--tx);border-radius:18px;padding:6px 12px;cursor:pointer;margin-top:10px;white-space:nowrap}
+.quote{border-left:4px solid var(--ac2);padding:6px 12px;margin:10px 0 14px;background:var(--card);border-radius:0 8px 8px 0}
+nav{display:flex;gap:6px;overflow-x:auto;padding:6px 0 10px;position:sticky;top:0;background:var(--bg);z-index:5;scrollbar-width:thin}
+nav button,.modes button,.btn{font:600 14px inherit;font-family:inherit;white-space:nowrap;padding:8px 14px;border-radius:20px;border:1px solid var(--bd);background:var(--card);color:var(--tx);cursor:pointer}
+nav button[aria-selected=true],.modes button[aria-selected=true],.btn.p{background:var(--ac);color:var(--onac);border-color:var(--ac)}
+button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline:3px solid var(--ac2);outline-offset:2px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:14px;margin-bottom:14px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.grid>.card{margin-bottom:0}
+@media (max-width:760px){.grid{grid-template-columns:1fr}}
+canvas{width:100%;height:auto;display:block;background:var(--cv);border:1px solid var(--bd);border-radius:10px}
+.modes{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.ctl{display:grid;grid-template-columns:auto 1fr auto;gap:8px;align-items:center;margin:6px 0}
+.ctl label{font-weight:600;min-width:84px}
+.ctl output{font-variant-numeric:tabular-nums;min-width:96px;text-align:right}
+input[type=range]{width:100%;accent-color:var(--ac)}
+input:disabled{opacity:.35}
+select,input[type=number],input[type=text]{font:inherit;padding:6px 8px;background:var(--card);color:var(--tx);border:1px solid var(--bd);border-radius:8px;max-width:100%}
+.ro{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:8px 0}
+.ro.c3{grid-template-columns:repeat(3,1fr)}
+@media (max-width:520px){.ro{grid-template-columns:repeat(2,1fr)}}
+.ro div{background:var(--bg);border:1px solid var(--bd);border-radius:8px;padding:6px;text-align:center;font-size:13px;color:var(--mut)}
+.ro b{display:block;font-size:16px;color:var(--tx);font-variant-numeric:tabular-nums}
+.eq{font:700 17px Georgia,serif;text-align:center;padding:8px;background:var(--bg);border-radius:8px;border:1px dashed var(--ac);overflow-x:auto}
+.f{font-family:Georgia,serif;font-style:italic;background:var(--bg);padding:2px 8px;border-radius:6px;display:inline-block;margin:2px 0}
+.sec{display:none}.sec.on{display:block}
+dl{margin:0}dt{font-weight:700;color:var(--ac);margin-top:10px}dd{margin:0}
+ol,ul{padding-left:20px;margin:6px 0}
+li{margin:3px 0}
+.step{border-left:3px solid var(--ac);padding:2px 0 2px 12px;margin:10px 0;overflow-x:auto}
+.note{background:var(--bg);border:1px solid var(--bd);border-left:4px solid var(--ac2);border-radius:8px;padding:8px 12px;margin:10px 0;font-size:15px}
+.warn{border-left-color:var(--bad)}
+table{border-collapse:collapse;width:100%;font-size:14px;font-variant-numeric:tabular-nums}
+th,td{border:1px solid var(--bd);padding:5px 8px;text-align:left}
+th{background:var(--bg)}
+.tw{overflow-x:auto}
+details{border:1px solid var(--bd);border-radius:10px;padding:8px 12px;margin:8px 0;background:var(--bg)}
+summary{cursor:pointer;font-weight:700}
+details[open]>summary{margin-bottom:6px}
+.bar{display:flex;height:34px;border-radius:8px;overflow:hidden;border:1px solid var(--bd);margin:8px 0}
+.bar div{display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:700;min-width:0;overflow:hidden;transition:width .3s}
+.dot{display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:6px;vertical-align:middle}
+.tl{list-style:none;padding:0;border-left:3px solid var(--ac);margin-left:6px}
+.tl li{padding:2px 0 8px 14px;position:relative}
+.tl li::before{content:"";position:absolute;left:-9px;top:9px;width:12px;height:12px;border-radius:50%;background:var(--ac2)}
+.tl b{color:var(--ac)}
+.q{border:1px solid var(--bd);border-radius:10px;padding:10px 12px;margin:10px 0}
+.q .opt{display:block;width:100%;text-align:left;font:inherit;padding:8px 12px;margin:6px 0;border:1px solid var(--bd);border-radius:8px;background:var(--card);color:var(--tx);cursor:pointer}
+.q .opt.ok{background:var(--okbg);border-color:var(--ok)}
+.q .opt.bad{background:var(--badbg);border-color:var(--bad)}
+.q .ex{display:none;margin-top:6px;font-size:15px}
+.q.done .ex{display:block}
+.in{display:grid;grid-template-columns:1fr 1.2fr auto;gap:8px;align-items:center;margin:6px 0}
+.in label{font-weight:600}
+.res{background:var(--bg);border:1px solid var(--ac);border-radius:10px;padding:10px 12px;margin-top:10px;overflow-x:auto}
+.res .big{font:800 22px Georgia,serif;color:var(--ac)}
+svg text{fill:var(--tx);font:600 13px "Segoe UI",system-ui,sans-serif;text-anchor:middle}
+svg .bx{fill:var(--card);stroke:var(--ac);stroke-width:1.5}
+svg .ln{stroke:var(--mut);stroke-width:1.5;fill:none}
+svg .sm{font-weight:500;font-size:12px;fill:var(--mut)}
+footer{color:var(--mut);font-size:14px;margin-top:8px}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+</style></head><body><div class="w">
+<header class="hd"><div>
+<h1>Gas Ideal</h1>
+<p class="sub"><b>Virtual Gas Lab</b> · Media ajar interaktif Kimia Fisika: geser, amati, hitung, dan temukan sendiri hubungan P, V, T, dan n.</p>
+<p class="sub" style="margin:0;font-size:14px">Disusun oleh <b>Raudhatul Jannah</b> · NIM 06101182530001 · Program Studi Pendidikan Kimia · 2026</p></div>
+<button class="tb" id="thm" type="button">◐ Ganti tema</button></header>
+<div class="quote">Gas ideal: partikel titik tanpa gaya tarik, bertumbukan lenting sempurna. Tekanan lahir dari tumbukan partikel ke dinding.</div>
+<noscript><div class="note warn">Media ini memerlukan JavaScript agar simulasi dan kalkulator berjalan.</div></noscript>
+<nav role="tablist" id="tabs" aria-label="Submateri gas ideal">
+<button role="tab" aria-selected="true" data-t="pen">Pengantar</button>
+<button role="tab" aria-selected="false" data-t="sim">Simulasi hukum gas</button>
+<button role="tab" aria-selected="false" data-t="kin">Teori kinetik</button>
+<button role="tab" aria-selected="false" data-t="pro">Proses P–V</button>
+<button role="tab" aria-selected="false" data-t="mix">Dalton &amp; Graham</button>
+<button role="tab" aria-selected="false" data-t="real">Gas nyata</button>
+<button role="tab" aria-selected="false" data-t="app">Penerapan sehari-hari</button>
+<button role="tab" aria-selected="false" data-t="cal">Kalkulator</button>
+<button role="tab" aria-selected="false" data-t="rum">Rumus &amp; penurunan</button>
+<button role="tab" aria-selected="false" data-t="ist">Istilah &amp; referensi</button>
+</nav>
+
+<!-- ============ PENGANTAR ============ -->
+<section class="sec on" id="pen" role="tabpanel">
+<div class="card"><h2>Identitas media</h2><div class="tw"><table>
+<tr><th style="width:34%">Aspek</th><th>Keterangan</th></tr>
+<tr><td>Judul media</td><td>Virtual Gas Lab: Media Ajar Interaktif Gas Ideal</td></tr>
+<tr><td>Penyusun</td><td>Raudhatul Jannah</td></tr>
+<tr><td>NIM</td><td>06101182530001</td></tr>
+<tr><td>Mata kuliah</td><td>Kimia Fisika</td></tr>
+<tr><td>Program studi</td><td>Pendidikan Kimia</td></tr>
+<tr><td>Tahun pembuatan</td><td>2026 (versi 2.0)</td></tr>
+<tr><td>Sasaran</td><td>Mahasiswa kimia atau pendidikan kimia semester awal sampai menengah</td></tr>
+<tr><td>Materi</td><td>Gas ideal: variabel keadaan, hukum gas empiris, persamaan keadaan, teori kinetik, proses P–V, campuran gas, gas nyata, dan penerapan sehari-hari</td></tr>
+<tr><td>Waktu belajar</td><td>± 100 menit (sembilan modul interaktif)</td></tr></table></div></div>
+
+<div class="card"><h2>Capaian dan tujuan pembelajaran</h2>
+<p class="sub" style="margin-bottom:4px"><b>Capaian pembelajaran mata kuliah.</b> Mahasiswa mampu menerapkan konsep gas ideal dan gas nyata untuk menjelaskan serta memprediksi sifat gas, dan menyelesaikan masalah kuantitatif secara sistematis.</p>
+<p class="sub" style="margin-bottom:6px"><b>Tujuan pembelajaran.</b> Setelah memakai media ini, kamu mampu:</p>
+<div class="tw"><table>
+<tr><th>No</th><th>Tujuan (kata kerja operasional)</th><th>Indikator keberhasilan yang terukur</th><th>Level</th><th>Modul</th></tr>
+<tr><td>1</td><td><b>Menjelaskan</b> sifat gas dan postulat teori kinetik gas ideal</td><td>Menyebutkan minimal 4 dari 5 sifat umum gas dan 5 postulat teori kinetik dengan benar</td><td>C2</td><td>Pengantar; Teori kinetik</td></tr>
+<tr><td>2</td><td><b>Membandingkan</b> hukum Boyle, Charles, Gay-Lussac, dan Avogadro</td><td>Menentukan variabel yang tetap, bentuk grafik, dan hasil kali atau hasil bagi konstan dari tiga data percobaan untuk setiap hukum</td><td>C4</td><td>Simulasi hukum gas</td></tr>
+<tr><td>3</td><td><b>Menurunkan</b> PV = nRT dari hukum empiris dan teori kinetik</td><td>Menuliskan minimal 4 langkah penurunan secara berurutan dan logis</td><td>C3</td><td>Rumus &amp; penurunan</td></tr>
+<tr><td>4</td><td><b>Menghitung</b> P, V, n, T, massa molar, dan massa jenis gas</td><td>Hasil hitungan dengan satuan konsisten berbeda ≤ 1% dari kalkulator media</td><td>C3</td><td>Kalkulator</td></tr>
+<tr><td>5</td><td><b>Menerapkan</b> hukum Dalton dan hukum Graham</td><td>Menghitung tekanan parsial tiga gas dan memprediksi gas yang berefusi lebih cepat beserta perbandingan lajunya</td><td>C3</td><td>Dalton &amp; Graham</td></tr>
+<tr><td>6</td><td><b>Menganalisis</b> diagram P–V proses isoterm, isobar, dan isokhor</td><td>Menghitung kerja ekspansi ketiga proses dan mengurutkannya dengan alasan luas di bawah kurva</td><td>C4</td><td>Proses P–V</td></tr>
+<tr><td>7</td><td><b>Mengevaluasi</b> batas keberlakuan model gas ideal</td><td>Menentukan wilayah suhu dan volume molar dengan |Z − 1| &lt; 5% untuk suatu gas dan menyimpulkan kelayakan model</td><td>C5</td><td>Gas nyata</td></tr>
+<tr><td>8</td><td><b>Menganalisis</b> penerapan hukum gas pada ban, tabung LPG, balon udara, dan scuba diving</td><td>Menghitung perubahan tekanan atau volume pada keempat situasi dan menjelaskan mengapa gas ideal tidak berlaku pada LPG cair</td><td>C4</td><td>Penerapan sehari-hari</td></tr></table></div></div>
+
+<div class="card"><h2>Peta konsep</h2>
+<svg viewBox="0 0 720 350" role="img" aria-label="Peta konsep gas ideal" style="width:100%;height:auto">
+<rect class="bx" x="270" y="8" width="180" height="40" rx="10"/><text x="360" y="33">GAS IDEAL</text>
+<path class="ln" d="M360 48V68M120 68H600M120 68V88M360 68V88M600 68V88"/>
+<rect class="bx" x="20" y="88" width="200" height="50" rx="10"/><text x="120" y="118">Teori kinetik (model)</text>
+<rect class="bx" x="260" y="88" width="200" height="50" rx="10"/><text x="360" y="118">Hukum gas empiris</text>
+<rect class="bx" x="500" y="88" width="200" height="50" rx="10"/><text x="600" y="118">PV = nRT</text>
+<path class="ln" d="M120 138V178M360 138V178M600 138V178"/>
+<rect class="bx" x="20" y="178" width="200" height="56" rx="10"/><text x="120" y="203">Postulat · Ek = 3/2 kT</text><text class="sm" x="120" y="222">v rms · Maxwell-Boltzmann</text>
+<rect class="bx" x="260" y="178" width="200" height="56" rx="10"/><text x="360" y="203">Boyle · Charles</text><text class="sm" x="360" y="222">Gay-Lussac · Avogadro</text>
+<rect class="bx" x="500" y="178" width="200" height="56" rx="10"/><text x="600" y="203">Dalton · Graham</text><text class="sm" x="600" y="222">ρ = PM/RT · proses P–V</text>
+<path class="ln" d="M120 234V258M360 234V258M600 234V258M120 258H600M360 258V280"/>
+<rect class="bx" x="150" y="280" width="420" height="56" rx="10"/><text x="360" y="305">Batas model: gas nyata</text><text class="sm" x="360" y="324">faktor Z · persamaan van der Waals</text>
+</svg></div>
+
+<div class="grid">
+<div class="card"><h2>Sifat umum gas</h2><ul>
+<li>Tidak berbentuk dan berukuran tetap: mengisi seluruh wadah.</li>
+<li>Mudah dimampatkan (kompresibel) karena sebagian besar volumenya ruang kosong.</li>
+<li>Kerapatan rendah; gas berbeda bercampur sempurna.</li>
+<li>Menekan semua dinding wadah sama besar.</li>
+<li>Keadaan gas ditentukan empat variabel: <b>P, V, T, n</b>.</li></ul></div>
+<div class="card"><h2>Cara memakai media ini</h2><ol>
+<li>Mulai dari <b>Simulasi</b>: pilih satu hukum, geser slider, lalu klik <i>Catat data</i>.</li>
+<li>Lihat penjelasan di <b>Teori kinetik</b> dan <b>Rumus &amp; penurunan</b>.</li>
+<li>Terapkan di <b>Proses P–V</b>, <b>Dalton &amp; Graham</b>, dan <b>Gas nyata</b>.</li>
+<li>Lihat gas ideal di sekitarmu pada <b>Penerapan sehari-hari</b>: ban, tabung LPG, balon udara, dan scuba diving.</li>
+<li>Uji dengan <b>Kalkulator</b>, dan latih hitungan di <b>Rumus &amp; penurunan</b>.</li></ol></div></div>
+
+<div class="card"><h2>Satuan dan konstanta</h2><div class="tw"><table>
+<tr><th>Besaran</th><th>Satuan dan konversi</th></tr>
+<tr><td>Tekanan P</td><td>1 atm = 101.325 Pa = 101,325 kPa = 760 mmHg = 760 torr = 1,01325 bar</td></tr>
+<tr><td>Volume V</td><td>1 L = 1 dm³ = 1000 mL = 10⁻³ m³</td></tr>
+<tr><td>Suhu T</td><td>T(K) = t(°C) + 273,15 (selalu kelvin dalam rumus gas)</td></tr>
+<tr><td>Jumlah n</td><td>n = massa/Mr; 1 mol = 6,022×10²³ partikel</td></tr>
+<tr><td>Kerja</td><td>1 L·atm = 101,325 J</td></tr>
+<tr><td>R</td><td>0,08206 L·atm/(mol·K) = 8,314 J/(mol·K) = 0,08314 L·bar/(mol·K) = 62,36 L·mmHg/(mol·K) = 1,987 kal/(mol·K)</td></tr></table></div>
+<h3>Kondisi acuan dan volume molar gas ideal</h3><div class="tw"><table>
+<tr><th>Kondisi</th><th>T, P</th><th>Vm (L/mol)</th></tr>
+<tr><td>STP klasik</td><td>273,15 K, 1 atm</td><td>22,414</td></tr>
+<tr><td>STP IUPAC (sejak 1982)</td><td>273,15 K, 1 bar</td><td>22,711</td></tr>
+<tr><td>25 °C, 1 atm</td><td>298,15 K, 1 atm</td><td>24,47</td></tr>
+<tr><td>SATP</td><td>298,15 K, 1 bar</td><td>24,79</td></tr></table></div></div>
+
+<div class="card"><h2>Linimasa penemuan (tahun perkiraan)</h2><ul class="tl">
+<li><b>1662 · Boyle</b>: tekanan berbanding terbalik dengan volume pada T tetap.</li>
+<li><b>1702 · Amontons</b>: tekanan naik bersama suhu pada volume tetap (dirumuskan ulang oleh Gay-Lussac).</li>
+<li><b>1787–1802 · Charles dan Gay-Lussac</b>: volume sebanding dengan suhu pada tekanan tetap.</li>
+<li><b>1801 · Dalton</b>: tekanan total campuran sama dengan jumlah tekanan parsial.</li>
+<li><b>1811 · Avogadro</b>: volume sama pada P dan T sama mengandung jumlah molekul sama.</li>
+<li><b>1831–1848 · Graham</b>: laju efusi berbanding terbalik dengan akar massa molar.</li>
+<li><b>1834 · Clapeyron</b>: menggabungkan hukum-hukum menjadi PV = nRT.</li>
+<li><b>1860–1870-an · Maxwell dan Boltzmann</b>: distribusi laju molekul dan teori kinetik.</li>
+<li><b>1873 · van der Waals</b>: persamaan untuk gas nyata.</li></ul></div>
+</section>
+
+<!-- ============ SIMULASI ============ -->
+<section class="sec" id="sim" role="tabpanel">
+<div class="modes" id="modes" role="tablist" aria-label="Pilih hukum gas"></div>
+<div class="grid">
+<div class="card"><h2>Silinder bergerak</h2>
+<canvas id="cs" width="1040" height="760" aria-label="Simulasi partikel gas dalam silinder dengan piston"></canvas>
+<div class="ctl"><label for="sT">Suhu T</label><input id="sT" type="range" min="100" max="1000" step="10"><output id="oT"></output></div>
+<div class="ctl"><label for="sV">Volume V</label><input id="sV" type="range" min="1" max="10" step="0.1"><output id="oV"></output></div>
+<div class="ctl"><label for="sN">Jumlah n</label><input id="sN" type="range" min="0.5" max="3" step="0.1"><output id="oN"></output></div>
+<div class="ro"><div>P<b id="rP"></b></div><div>V<b id="rV"></b></div><div>T<b id="rT"></b></div><div>n<b id="rN"></b></div></div>
+<div class="eq" id="eq"></div>
+<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
+<button class="btn" id="bPause" type="button">⏸ Jeda</button>
+<button class="btn p" id="bRec" type="button">＋ Catat data</button></div></div>
+<div class="card"><h2 id="mt"></h2>
+<canvas id="cg" width="1040" height="760" aria-label="Grafik hubungan variabel gas"></canvas>
+<p id="md" style="margin:10px 0 0"></p>
+<h3>Apa yang terjadi pada molekul?</h3><p id="mm" style="margin:0"></p>
+<details><summary>Tantangan prediksi</summary><p id="ch" style="margin:0"></p></details></div>
+</div>
+<div class="card" style="margin-top:14px"><h2>Tabel data percobaan</h2>
+<p class="sub" style="margin-bottom:6px">Geser slider, klik <b>Catat data</b>, lalu lihat apakah kolom konstanta tetap sama.</p>
+<div class="tw" id="tbl"></div><p id="tnote" style="margin:8px 0 0"></p>
+<button class="btn" id="bClr" type="button" style="margin-top:8px">Hapus data</button></div>
+<div class="card"><h2>Intinya</h2><ul>
+<li><b>Boyle</b>: T dan n tetap, P naik saat V turun (P berbanding terbalik dengan V).</li>
+<li><b>Charles</b>: P dan n tetap, V naik lurus dengan T. Garis menuju V = 0 saat T = 0 K.</li>
+<li><b>Gay-Lussac</b>: V dan n tetap, P naik lurus dengan T.</li>
+<li><b>Avogadro</b>: P dan T tetap, V naik lurus dengan n.</li>
+<li>Gabungan semuanya: <span class="f">PV = nRT</span>.</li></ul></div>
+</section>
+
+<!-- ============ TEORI KINETIK ============ -->
+<section class="sec" id="kin" role="tabpanel">
+<div class="card"><h2>Distribusi laju molekul (Maxwell-Boltzmann)</h2>
+<p class="sub">Naikkan suhu: puncak bergeser ke kanan dan melebar. Pilih gas: molekul ringan lebih cepat pada suhu sama. Luas di bawah kurva selalu 1 (100% molekul).</p>
+<canvas id="ck" width="1040" height="640" aria-label="Kurva distribusi laju molekul"></canvas>
+<div class="ctl"><label for="kT">Suhu T</label><input id="kT" type="range" min="100" max="1000" step="10" value="300"><output id="koT"></output></div>
+<div class="ctl"><label for="kG">Gas</label><select id="kG" style="grid-column:2/4"></select></div>
+<div class="ctl"><label for="kG2">Bandingkan</label><select id="kG2" style="grid-column:2/4"></select></div>
+<div class="ctl"><label for="kv">Laju acuan v₀</label><input id="kv" type="range" min="0" max="2000" step="10" value="500"><output id="kov"></output></div>
+<div class="ro" id="kr"></div>
+<div class="note" id="kfrac"></div></div>
+<div class="card"><h2>Laju beberapa gas pada suhu terpilih</h2><div class="tw" id="ktab"></div></div>
+<div class="card"><h2>Postulat teori kinetik gas ideal</h2><ol>
+<li>Gas terdiri dari partikel sangat banyak yang bergerak acak lurus dengan laju beragam.</li>
+<li>Volume partikel diabaikan dibanding volume wadah.</li>
+<li>Tidak ada gaya tarik atau tolak antarpartikel, kecuali saat bertumbukan.</li>
+<li>Tumbukan antarpartikel dan dengan dinding lenting sempurna (energi kinetik total tetap).</li>
+<li>Energi kinetik rata-rata sebanding dengan suhu mutlak: <span class="f">Ek = (3/2) k T</span>.</li></ol>
+<h3>Tiga ukuran "laju khas" molekul</h3><ul>
+<li>Laju paling mungkin: <span class="f">v_mp = √(2RT/M)</span></li>
+<li>Laju rata-rata: <span class="f">v̄ = √(8RT/πM)</span></li>
+<li>Laju akar kuadrat rata-rata: <span class="f">v_rms = √(3RT/M)</span></li>
+<li>Urutan selalu: v_mp &lt; v̄ &lt; v_rms (perbandingan 1 : 1,128 : 1,225).</li></ul>
+<div class="note">Pada T sama, semua gas punya energi kinetik rata-rata <b>sama</b> (3/2 kT), tetapi laju molekul gas ringan lebih besar karena massanya kecil.</div></div>
+</section>
+
+<!-- ============ PROSES ============ -->
+<section class="sec" id="pro" role="tabpanel">
+<div class="card"><h2>Proses pada gas ideal: diagram P–V</h2>
+<p class="sub">Daerah berarsir di bawah kurva sama dengan kerja ekspansi gas.</p>
+<canvas id="cp" width="1040" height="680" aria-label="Diagram P-V proses isoterm, isobar, isokhor"></canvas>
+<div class="ctl"><label for="pm">Proses</label><select id="pm" style="grid-column:2/4">
+<option value="iso">Isoterm (T tetap)</option><option value="bar">Isobar (P tetap)</option><option value="khor">Isokhor (V tetap)</option></select></div>
+<div class="ctl"><label for="pn">Jumlah n</label><input id="pn" type="range" min="0.5" max="2" step="0.1" value="1"><output id="opn"></output></div>
+<div class="ctl"><label for="pT">Suhu awal T₁</label><input id="pT" type="range" min="200" max="600" step="10" value="300"><output id="opT"></output></div>
+<div class="ctl"><label for="pV">Volume awal V₁</label><input id="pV" type="range" min="2" max="8" step="0.1" value="5"><output id="opV"></output></div>
+<div class="ctl"><label for="pX" id="pXl">Volume akhir V₂</label><input id="pX" type="range" min="1" max="10" step="0.1" value="2"><output id="opX"></output></div>
+<div class="ro" id="pr"></div><div class="note" id="pnote"></div></div>
+<div class="card"><h2>Ringkasan proses</h2><div class="tw"><table>
+<tr><th>Proses</th><th>Syarat</th><th>Hubungan</th><th>Kerja oleh gas</th></tr>
+<tr><td>Isoterm</td><td>T tetap</td><td>P₁V₁ = P₂V₂</td><td>W = nRT ln(V₂/V₁)</td></tr>
+<tr><td>Isobar</td><td>P tetap</td><td>V₁/T₁ = V₂/T₂</td><td>W = P(V₂ − V₁)</td></tr>
+<tr><td>Isokhor</td><td>V tetap</td><td>P₁/T₁ = P₂/T₂</td><td>W = 0</td></tr></table></div>
+<p class="sub" style="margin-top:8px">Karena energi dalam gas ideal hanya bergantung pada suhu, pada proses isoterm ΔU = 0. Kaitan lengkap kerja, kalor, dan ΔU dibahas pada Hukum I Termodinamika.</p></div>
+</section>
+
+<!-- ============ DALTON & GRAHAM ============ -->
+<section class="sec" id="mix" role="tabpanel">
+<div class="card"><h2>Hukum Dalton: tekanan parsial</h2>
+<p class="sub">Setiap gas menekan seolah-olah sendirian di wadah. Tekanan total adalah jumlahnya.</p>
+<canvas id="cm" width="1040" height="480" aria-label="Campuran tiga gas dalam wadah"></canvas>
+<div class="ctl"><label for="dV">Volume V</label><input id="dV" type="range" min="5" max="50" step="1" value="20"><output id="odV"></output></div>
+<div class="ctl"><label for="dT">Suhu T</label><input id="dT" type="range" min="200" max="500" step="10" value="300"><output id="odT"></output></div>
+<div class="in"><label><span class="dot" style="background:var(--g1)"></span>Gas A</label><select id="dgA"></select><span></span></div>
+<div class="ctl"><label for="dA">n gas A</label><input id="dA" type="range" min="0" max="3" step="0.1" value="2"><output id="odA"></output></div>
+<div class="in"><label><span class="dot" style="background:var(--g2)"></span>Gas B</label><select id="dgB"></select><span></span></div>
+<div class="ctl"><label for="dB">n gas B</label><input id="dB" type="range" min="0" max="3" step="0.1" value="1"><output id="odB"></output></div>
+<div class="in"><label><span class="dot" style="background:var(--g3)"></span>Gas C</label><select id="dgC"></select><span></span></div>
+<div class="ctl"><label for="dC">n gas C</label><input id="dC" type="range" min="0" max="3" step="0.1" value="0.5"><output id="odC"></output></div>
+<div class="bar" id="dbar" aria-label="Fraksi mol"></div>
+<div class="tw" id="dtab"></div><div class="eq" id="deq" style="margin-top:10px"></div></div>
+
+<div class="card"><h2>Hukum Graham: efusi gas</h2>
+<p class="sub">Pada T dan P sama, gas lebih ringan keluar melalui lubang kecil lebih cepat. Bola yang lebih jauh menandakan laju efusi lebih besar.</p>
+<canvas id="cr" width="1040" height="340" aria-label="Perlombaan efusi dua gas"></canvas>
+<div class="in"><label for="gA"><span class="dot" style="background:var(--g1)"></span>Gas A</label><select id="gA"></select><span></span></div>
+<div class="in"><label for="gB"><span class="dot" style="background:var(--g2)"></span>Gas B</label><select id="gB"></select><button class="btn" id="bRace" type="button">↻ Ulang</button></div>
+<div class="res" id="gres"></div></div>
+</section>
+
+<!-- ============ GAS NYATA ============ -->
+<section class="sec" id="real" role="tabpanel">
+<div class="card"><h2>Kapan gas dianggap ideal?</h2>
+<p class="sub">Bandingkan gas ideal dengan gas nyata (persamaan van der Waals): <span class="f">P = RT/(Vm − b) − a/Vm²</span>. Faktor kompresibilitas <span class="f">Z = PVm/RT</span>; gas ideal selalu Z = 1.</p>
+<div class="modes" id="rmodes"></div>
+<canvas id="cn" width="1040" height="680" aria-label="Perbandingan gas ideal dan gas nyata"></canvas>
+<div class="ctl"><label for="rg">Gas</label><select id="rg" style="grid-column:2/4"></select></div>
+<div class="ctl"><label for="rT">Suhu T</label><input id="rT" type="range" min="150" max="600" step="10" value="300"><output id="orT"></output></div>
+<div class="ctl"><label for="rV">Vm (log)</label><input id="rV" type="range" min="0" max="100" step="1" value="30"><output id="orV"></output></div>
+<div class="ro" id="rr"></div><div class="note" id="rnote"></div></div>
+<div class="card"><h2>Penyebab penyimpangan</h2><ul>
+<li><b>Gaya tarik antarmolekul</b> (parameter a): mengurangi tekanan sehingga Z &lt; 1. Dominan pada tekanan sedang dan suhu rendah.</li>
+<li><b>Volume molekul sendiri</b> (parameter b): ruang gerak efektif lebih kecil sehingga Z &gt; 1. Dominan pada tekanan sangat tinggi.</li>
+<li>Gas mendekati ideal pada <b>tekanan rendah dan suhu tinggi</b>: jarak antarmolekul jauh dan energi kinetik mengalahkan gaya tarik.</li>
+<li>Di bawah suhu kritis, kurva van der Waals berlekuk: gas dapat mencair.</li></ul></div>
+</section>
+
+<!-- ============ KALKULATOR ============ -->
+<!-- ============ PENERAPAN SEHARI-HARI ============ -->
+<section class="sec" id="app" role="tabpanel">
+<div class="card"><h2>Gas ideal di sekitar kita</h2>
+<p class="sub">Hukum gas bukan hanya rumus di buku. Empat situasi berikut memakai persamaan yang sama dengan modul sebelumnya. Geser penggeser, amati hasilnya, dan perhatikan kapan model gas ideal berlaku dan kapan tidak.</p>
+<div class="ro" style="grid-template-columns:repeat(4,1fr)">
+<div><b>Ban</b>Gay-Lussac</div><div><b>Tabung LPG</b>Tekanan uap</div><div><b>Balon udara</b>ρ = PM/RT</div><div><b>Scuba diving</b>Boyle dan Dalton</div></div></div>
+
+<div class="card" id="a_ban"><h2>1. Tekanan ban kendaraan</h2>
+<p class="sub">Volume ban dan jumlah udara hampir tetap, jadi tekanan mutlak sebanding dengan suhu mutlak (Gay-Lussac). Alat ukur di pompa ban membaca <b>tekanan terukur</b> (selisih terhadap atmosfer), bukan tekanan mutlak.</p>
+<svg viewBox="0 0 220 90" role="img" aria-label="Ban kendaraan" style="width:100%;max-width:260px;height:auto"><circle cx="70" cy="45" r="38" fill="none" stroke="var(--tx)" stroke-width="10"/><circle cx="70" cy="45" r="14" fill="var(--bd)" stroke="var(--mut)"/><path d="M70 7V31M70 59V83M32 45H56M84 45H108" stroke="var(--mut)" stroke-width="2"/><text x="160" y="42">P naik</text><text x="160" y="60" class="sm">saat T naik</text></svg>
+<div id="c_ban"></div>
+<div class="ro c3" id="r_ban"></div>
+<div class="note" id="n_ban"></div></div>
+
+<div class="card" id="a_lpg"><h2>2. Tabung LPG</h2>
+<p class="sub">LPG (propana dan butana) disimpan sebagai <b>cairan bertekanan</b> di dalam tabung. Selama masih ada cairan, tekanan ditentukan oleh <b>tekanan uap</b> pada suhu itu, bukan oleh banyaknya isi. Hukum gas ideal hanya cocok untuk uap setelah keluar dari tabung.</p>
+<svg viewBox="0 0 220 110" role="img" aria-label="Tabung LPG berisi cairan dan uap" style="width:100%;max-width:260px;height:auto"><rect x="30" y="8" width="70" height="94" rx="18" fill="var(--card)" stroke="var(--tx)" stroke-width="2"/><rect x="32" y="52" width="66" height="48" rx="16" fill="var(--g1)" opacity=".35"/><text x="65" y="40" class="sm">uap</text><text x="65" y="80">cair</text><text x="165" y="48">P = P uap</text><text x="165" y="66" class="sm">(bukan nRT/V)</text></svg>
+<div id="c_lpg"></div>
+<div class="ro c3" id="r_lpg"></div>
+<div class="note" id="n_lpg"></div></div>
+
+<div class="card" id="a_bal"><h2>3. Balon udara panas</h2>
+<p class="sub">Udara dalam balon dipanaskan pada tekanan yang sama dengan udara luar, sehingga massa jenisnya lebih kecil (ρ = PM/RT) dan balon terangkat oleh selisih massa jenis dikali volume. Cari suhu minimum agar balon dapat terbang.</p>
+<svg viewBox="0 0 220 120" role="img" aria-label="Balon udara panas" style="width:100%;max-width:260px;height:auto"><ellipse cx="70" cy="48" rx="40" ry="42" fill="var(--ac2)" opacity=".75"/><path d="M42 80L60 102H80L98 80" fill="none" stroke="var(--mut)" stroke-width="2"/><rect x="58" y="102" width="24" height="14" fill="var(--mut)"/><text x="165" y="46">ρ dalam &lt; ρ luar</text><text x="165" y="64" class="sm">balon terangkat</text></svg>
+<div id="c_bal"></div>
+<div class="ro c3" id="r_bal"></div>
+<div class="note" id="n_bal"></div></div>
+
+<div class="card" id="a_sc"><h2>4. Scuba diving</h2>
+<p class="sub">Tekanan total di kedalaman <i>d</i> adalah tekanan atmosfer ditambah tekanan air. Volume udara menyusut menurut Boyle saat menyelam dan mengembang saat naik; konsumsi udara dan tekanan parsial O₂ naik sebanding dengan tekanan.</p>
+<svg viewBox="0 0 220 110" role="img" aria-label="Penyelam" style="width:100%;max-width:260px;height:auto"><rect x="0" y="10" width="220" height="100" fill="var(--g1)" opacity=".18"/><line x1="0" y1="10" x2="220" y2="10" stroke="var(--g1)" stroke-width="2"/><circle cx="70" cy="60" r="9" fill="var(--tx)"/><rect x="62" y="68" width="16" height="28" rx="6" fill="var(--tx)"/><rect x="82" y="64" width="9" height="30" rx="4" fill="var(--ac2)"/><text x="165" y="50">P naik</text><text x="165" y="68" class="sm">V udara menyusut</text></svg>
+<div id="c_sc"></div>
+<div class="ro c3" id="r_sc"></div>
+<div class="note" id="n_sc"></div></div>
+
+<div class="card"><h2>Intinya</h2><ul>
+<li><b>Ban:</b> pakai tekanan mutlak dalam hukum Gay-Lussac, lalu ubah kembali ke tekanan terukur. Periksa tekanan saat ban dingin.</li>
+<li><b>LPG:</b> tekanan di dalam tabung tidak turun selama masih ada cairan. Hukum gas ideal berlaku untuk uap, bukan untuk cairan.</li>
+<li><b>Balon udara:</b> daya angkat berasal dari selisih massa jenis udara, ρ = PM/RT; udara panas jauh lebih ringan.</li>
+<li><b>Scuba:</b> tekanan naik ± 1 atm tiap 10 m. Jangan menahan napas saat naik karena udara paru mengembang mengikuti hukum Boyle.</li></ul>
+<p class="sub" style="margin:8px 0 0">Nilai tekanan uap LPG memakai persamaan Antoine pendekatan dan campuran ideal (hukum Raoult). Angka-angkanya untuk belajar, bukan untuk keperluan keselamatan.</p></div>
+</section>
+<!-- ============ KALKULATOR ============ -->
+<section class="sec" id="cal" role="tabpanel">
+<div class="card"><h2>Kalkulator PV = nRT</h2>
+<p class="sub">Pilih besaran yang dicari, isi tiga lainnya dengan satuan bebas. Konversi dan langkah dihitung otomatis.</p>
+<div class="modes" id="cmodes"></div><div id="cin"></div>
+<div class="res" id="cout"></div></div>
+<div class="card"><h2>Massa molar dan massa jenis</h2>
+<h3>Massa molar dari data percobaan: M = mRT/(PV)</h3>
+<div class="in"><label for="m_m">Massa gas</label><input id="m_m" type="number" step="any" value="2.00"><span>g</span></div>
+<div class="in"><label for="m_P">Tekanan</label><input id="m_P" type="number" step="any" value="2.05"><span>atm</span></div>
+<div class="in"><label for="m_V">Volume</label><input id="m_V" type="number" step="any" value="1.00"><span>L</span></div>
+<div class="in"><label for="m_T">Suhu</label><input id="m_T" type="number" step="any" value="400"><span>K</span></div>
+<div class="res" id="mres"></div>
+<h3>Massa jenis gas: ρ = PM/(RT)</h3>
+<div class="in"><label for="r_M">Massa molar M</label><input id="r_M" type="number" step="any" value="28.96"><span>g/mol</span></div>
+<div class="in"><label for="r_P">Tekanan</label><input id="r_P" type="number" step="any" value="1"><span>atm</span></div>
+<div class="in"><label for="r_T">Suhu</label><input id="r_T" type="number" step="any" value="298.15"><span>K</span></div>
+<div class="res" id="rres"></div></div>
+</section>
+
+<!-- ============ RUMUS ============ -->
+<section class="sec" id="rum" role="tabpanel">
+<div class="card"><h2>Dari empat hukum ke PV = nRT</h2>
+<div class="step"><b>1. Boyle</b> (n, T tetap): <span class="f">P ∝ 1/V</span> sehingga <span class="f">P₁V₁ = P₂V₂</span></div>
+<div class="step"><b>2. Charles</b> (n, P tetap): <span class="f">V ∝ T</span> sehingga <span class="f">V₁/T₁ = V₂/T₂</span> (T dalam kelvin)</div>
+<div class="step"><b>3. Gay-Lussac</b> (n, V tetap): <span class="f">P ∝ T</span> sehingga <span class="f">P₁/T₁ = P₂/T₂</span></div>
+<div class="step"><b>4. Avogadro</b> (P, T tetap): <span class="f">V ∝ n</span> sehingga <span class="f">V₁/n₁ = V₂/n₂</span></div>
+<div class="step"><b>5. Gabungan</b>: <span class="f">V ∝ (1/P)·T·n</span>, maka <span class="f">V = R·nT/P</span>, yaitu <span class="f">PV = nRT</span></div>
+<div class="step"><b>6. Hukum gabungan</b> (n tetap): <span class="f">P₁V₁/T₁ = P₂V₂/T₂</span></div>
+<div class="step"><b>7. Nilai R</b> (1 atm, 273,15 K, 1 mol, V = 22,414 L):<br>
+<span class="f">R = PV/nT = (1 atm)(22,414 L)/((1 mol)(273,15 K)) = 0,08206 L·atm/(mol·K)</span><br>
+<span class="f">R = 8,314 J/(mol·K)</span> (dari 1 L·atm = 101,325 J)</div></div>
+
+<div class="card"><h2>Hukum-hukum dari PV = nRT</h2>
+<details open><summary>Menurunkan hukum gabungan</summary>
+<p>Keadaan 1: P₁V₁ = nRT₁ dan keadaan 2: P₂V₂ = nRT₂. Bagi: <span class="f">P₁V₁/T₁ = nR = P₂V₂/T₂</span>. Dari sini: T tetap → Boyle; P tetap → Charles; V tetap → Gay-Lussac.</p></details>
+<details><summary>Massa jenis dan massa molar</summary>
+<p>n = m/M, maka PV = (m/M)RT. Karena ρ = m/V: <span class="f">ρ = PM/RT</span> dan <span class="f">M = ρRT/P</span>.</p>
+<p>Akibatnya: pada T dan P sama, gas bermassa molar besar lebih rapat; pada P tetap, ρ ∝ 1/T (udara panas naik).</p></details>
+<details><summary>Hukum Dalton</summary>
+<p>Tiap gas: PᵢV = nᵢRT. Jumlahkan: ΣPᵢ·V = (Σnᵢ)RT = P_total·V, sehingga <span class="f">P_total = ΣPᵢ</span>. Bagi: <span class="f">Pᵢ/P_total = nᵢ/n_total = xᵢ</span>, maka <span class="f">Pᵢ = xᵢ · P_total</span>.</p>
+<p>Massa molar rata-rata campuran: <span class="f">M̄ = Σ xᵢMᵢ</span>. Contoh udara (78% N₂, 21% O₂, 1% Ar): 0,78(28,01) + 0,21(32,00) + 0,01(39,95) ≈ 28,97 g/mol.</p></details>
+<details><summary>Hukum Graham</summary>
+<p>Pada T sama, laju molekul rata-rata <span class="f">v̄ ∝ √(T/M)</span>. Laju efusi sebanding dengan laju molekul, sehingga <span class="f">r₁/r₂ = √(M₂/M₁)</span>. Karena waktu efusi t ∝ 1/r: <span class="f">t₁/t₂ = √(M₁/M₂)</span>.</p></details></div>
+
+<div class="card"><h2>Penurunan dari teori kinetik</h2>
+<div class="step">Satu molekul bermassa <i>m</i> menumbuk dinding kubus sisi <i>L</i>: perubahan momentum <span class="f">Δp = 2m·vₓ</span></div>
+<div class="step">Selang antartumbukan pada dinding sama: <span class="f">Δt = 2L/vₓ</span>, jadi gaya rata-rata <span class="f">F = Δp/Δt = m·vₓ²/L</span></div>
+<div class="step">Untuk N molekul: <span class="f">F = N·m·⟨vₓ²⟩/L</span>. Karena gerak acak, <span class="f">⟨vₓ²⟩ = ⟨v²⟩/3</span></div>
+<div class="step">Tekanan <span class="f">P = F/L² = N·m·⟨v²⟩/(3V)</span>, sehingga <span class="f">PV = ⅓·N·m·v²rms = ⅔·N·Ek</span></div>
+<div class="step">Samakan dengan <span class="f">PV = N·kT</span>: <span class="f">Ek = ½·m·v²rms = (3/2) kT</span></div>
+<div class="step">Maka <span class="f">v_rms = √(3kT/m) = √(3RT/M)</span> (M dalam kg/mol), dan energi per mol <span class="f">U = (3/2) RT</span></div>
+<div class="step">Bentuk lain: <span class="f">P = ⅓ ρ v²rms</span> (ρ = massa jenis gas)</div></div>
+
+<div class="card"><h2>Tabel rumus</h2><div class="tw"><table>
+<tr><th>Rumus</th><th>Kegunaan</th><th>Syarat</th></tr>
+<tr><td>PV = nRT</td><td>Persamaan keadaan</td><td>Gas ideal; satuan konsisten</td></tr>
+<tr><td>PV = NkT</td><td>Bentuk molekuler (k = 1,381×10⁻²³ J/K)</td><td>N = n·Nₐ</td></tr>
+<tr><td>P₁V₁ = P₂V₂</td><td>Boyle</td><td>n, T tetap</td></tr>
+<tr><td>V₁/T₁ = V₂/T₂</td><td>Charles</td><td>n, P tetap; T kelvin</td></tr>
+<tr><td>P₁/T₁ = P₂/T₂</td><td>Gay-Lussac</td><td>n, V tetap; T kelvin</td></tr>
+<tr><td>V₁/n₁ = V₂/n₂</td><td>Avogadro</td><td>P, T tetap</td></tr>
+<tr><td>ρ = PM/RT</td><td>Massa jenis / massa molar</td><td>M dalam g/mol → ρ dalam g/L</td></tr>
+<tr><td>Pᵢ = xᵢ·P_total</td><td>Dalton</td><td>Gas campuran tidak bereaksi</td></tr>
+<tr><td>r₁/r₂ = √(M₂/M₁)</td><td>Graham (efusi)</td><td>T, P sama</td></tr>
+<tr><td>v_rms = √(3RT/M)</td><td>Laju molekul</td><td>M dalam kg/mol</td></tr>
+<tr><td>Ek = (3/2)kT</td><td>Energi kinetik rata-rata</td><td>Per molekul</td></tr>
+<tr><td>W = nRT ln(V₂/V₁)</td><td>Kerja ekspansi isoterm</td><td>Reversibel</td></tr>
+<tr><td>Z = PV/nRT</td><td>Ukuran kenonidealan</td><td>Z = 1 gas ideal</td></tr></table></div></div>
+
+<div class="card"><h2>Kesalahan yang sering terjadi</h2><ul>
+<li>Memakai °C dalam rumus gas. Selalu ubah ke kelvin.</li>
+<li>Mencampur satuan: R = 0,08206 hanya untuk atm dan L; R = 8,314 untuk Pa dan m³.</li>
+<li>Memakai tekanan terukur (gauge) sebagai tekanan mutlak. Tekanan mutlak = gauge + tekanan atmosfer.</li>
+<li>Menganggap volume molar selalu 22,4 L/mol. Itu hanya untuk 273,15 K dan 1 atm.</li>
+<li>Lupa bahwa M dalam g/mol memberi ρ dalam g/L, bukan kg/m³.</li></ul></div>
+</section>
+
+<!-- ============ ISTILAH ============ -->
+<section class="sec" id="ist" role="tabpanel">
+<div class="card"><h2>Istilah kunci</h2>
+<div class="in" style="grid-template-columns:1fr"><input id="gq" type="text" placeholder="Cari istilah, mis. efusi" aria-label="Cari istilah"></div>
+<dl id="gl"></dl></div>
+<div class="card"><h2>Rangkuman</h2><ul>
+<li>Gas ideal ditandai partikel tanpa volume dan tanpa gaya antarpartikel; keadaannya diatur PV = nRT.</li>
+<li>Empat hukum empiris (Boyle, Charles, Gay-Lussac, Avogadro) adalah kasus khusus PV = nRT.</li>
+<li>Teori kinetik menjelaskan P sebagai tumbukan, T sebagai ukuran energi kinetik rata-rata, dan memberi v_rms = √(3RT/M).</li>
+<li>Dalton dan Graham memperluas model ke campuran dan laju efusi.</li>
+<li>Kerja ekspansi dibaca dari luas di bawah kurva P–V.</li>
+<li>Gas nyata menyimpang pada P tinggi dan T rendah; ukurannya Z ≠ 1.</li></ul></div>
+<div class="card"><h2>Referensi</h2><ol>
+<li>Atkins, P., dan de Paula, J. (2014). <i>Atkins' Physical Chemistry</i> (edisi ke-10). Oxford University Press.</li>
+<li>Castellan, G. W. (1983). <i>Physical Chemistry</i> (edisi ke-3). Addison-Wesley.</li>
+<li>Chang, R. (2010). <i>Chemistry</i> (edisi ke-10). McGraw-Hill.</li>
+<li>Silberberg, M. S. (2018). <i>Chemistry: The Molecular Nature of Matter and Change</i> (edisi ke-8). McGraw-Hill.</li>
+<li>Tiesinga, E., Mohr, P. J., Newell, D. B., dan Taylor, B. N. (2021). CODATA recommended values of the fundamental physical constants: 2018. <i>Reviews of Modern Physics, 93</i>(2), 025010.</li></ol>
+<p class="sub" style="margin:8px 0 0">Konstanta van der Waals diambil dari tabel buku teks umum dan bersifat pendekatan.</p></div>
+</section>
+<footer>Virtual Gas Lab (versi 2.0, 2026) · Media ajar Kimia Fisika: Gas Ideal · Disusun oleh Raudhatul Jannah, NIM 06101182530001, Program Studi Pendidikan Kimia.</footer>
+</div>
+
+<script>
+'use strict';
+const R=0.082057,Rj=8.314462,kB=1.380649e-23,LATM=101.325;
+const $=i=>document.getElementById(i);
+const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const f=(x,d=2)=>isFinite(x)?Number(x).toFixed(d).replace('.',','):'–';
+const supc=e=>String(e).replace(/[-0-9]/g,c=>'⁻⁰¹²³⁴⁵⁶⁷⁸⁹'['-0123456789'.indexOf(c)]);
+const sci=(x,d=2)=>{const p=x.toExponential(d).split('e');return p[0].replace('.',',')+'×10'+supc(+p[1])};
+const sig=x=>{const a=Math.abs(x);if(a!==0&&(a<1e-3||a>=1e6))return sci(x,3);return String(+x.toPrecision(5)).replace('.',',')};
+const nice=(v,a)=>{for(const k of a)if(k>=v)return k;return a[a.length-1]};
+function mk(id,W,H){const c=$(id);c.width=W*2;c.height=H*2;const x=c.getContext('2d');x.scale(2,2);return x}
+const rm=matchMedia('(prefers-color-scheme:dark)')&&matchMedia('(prefers-reduced-motion:reduce)').matches;
+const GL=[['H₂',2.016],['He',4.003],['CH₄',16.04],['NH₃',17.03],['N₂',28.01],['O₂',32.00],['Ar',39.95],['CO₂',44.01],['Cl₂',70.90]];
+function fillSel(id,def,blank){const s=$(id);s.innerHTML=(blank?'<option value="">— tanpa pembanding —</option>':'')+GL.map(g=>`<option value="${g[1]}"${g[0]===def?' selected':''}>${g[0]} (${String(g[1]).replace('.',',')} g/mol)</option>`).join('')}
+const gname=M=>{const g=GL.find(x=>x[1]===+M);return g?g[0]:'?'};
+
+
+/* ---------- PENERAPAN SEHARI-HARI ---------- */
+(function(){
+ const PA=1.01325; // bar per atm
+ function ctls(box,spec){$(box).innerHTML=spec.map(s=>s.sel?
+  `<div class="ctl"><label for="ap_${s.id}">${s.l}</label><select id="ap_${s.id}" style="grid-column:2/4">${s.sel.map(o=>`<option value="${o[0]}"${o[0]===s.v?' selected':''}>${o[1]}</option>`).join('')}</select></div>`:
+  `<div class="ctl"><label for="ap_${s.id}">${s.l}</label><input id="ap_${s.id}" type="range" min="${s.min}" max="${s.max}" step="${s.st}" value="${s.v}"><output id="o_ap_${s.id}"></output></div>`).join('');}
+ const val=i=>+$('ap_'+i).value;
+ const out=(i,x,d,u)=>{$('o_ap_'+i).textContent=f(x,d)+' '+u};
+ const ro=(id,a)=>{$(id).innerHTML=a.map(x=>`<div>${x[0]}<b>${x[1]}</b></div>`).join('')};
+ /* ban */
+ ctls('c_ban',[{id:'bP',l:'P terukur (dingin)',min:1.5,max:3.5,st:.05,v:2.2},{id:'bT1',l:'Suhu awal',min:10,max:40,st:1,v:27},{id:'bT2',l:'Suhu setelah jalan',min:27,max:110,st:1,v:57}]);
+ function ban(){const P1=val('bP'),T1=val('bT1')+273.15,T2=val('bT2')+273.15;
+  out('bP',P1,2,'bar');out('bT1',val('bT1'),0,'°C');out('bT2',val('bT2'),0,'°C');
+  const Pa1=P1+PA,Pa2=Pa1*T2/T1,Pg2=Pa2-PA,naif=P1*T2/T1;
+  ro('r_ban',[['P mutlak awal',f(Pa1,2)+' bar'],['P mutlak akhir',f(Pa2,2)+' bar'],['P terukur akhir',f(Pg2,2)+' bar']]);
+  $('n_ban').innerHTML='Kenaikan tekanan terukur: <b>+'+f(Pg2-P1,2)+' bar</b> ('+f((Pg2-P1)/P1*100,1)+'%). Jika suhu langsung dipakai pada tekanan terukur (salah), hasilnya '+f(naif,2)+' bar, galat '+f((Pg2-naif)/Pg2*100,1)+'%.';}
+ ['bP','bT1','bT2'].forEach(i=>$('ap_'+i).oninput=ban);ban();
+ /* LPG: Antoine, log10 P(mmHg)=A-B/(C+t) */
+ const AN={C3:[6.82973,813.2,248.0,44.10],C4:[6.80896,935.86,238.73,58.12]};
+ const pv=(k,t)=>Math.pow(10,AN[k][0]-AN[k][1]/(AN[k][2]+t))/760;
+ ctls('c_lpg',[{id:'lX',l:'Propana (% mol)',min:0,max:100,st:1,v:30},{id:'lT',l:'Suhu',min:-10,max:50,st:1,v:30},{id:'lm',l:'Isi tabung',sel:[['3','3 kg'],['5.5','5,5 kg'],['12','12 kg']],v:'3'}]);
+ function lpg(){const x=val('lX')/100,t=val('lT'),m=val('lm');
+  out('lX',val('lX'),0,'%');out('lT',t,0,'°C');
+  const p3=pv('C3',t),p4=pv('C4',t),P=x*p3+(1-x)*p4,M=x*AN.C3[3]+(1-x)*AN.C4[3],n=m*1000/M,T=t+273.15,V=n*R*T/1;
+  ro('r_lpg',[['P uap campuran',f(P,2)+' atm'],['P terukur',f((P-1)*PA,2)+' bar'],['M rata-rata',f(M,1)+' g/mol'],['P uap propana',f(p3,2)+' atm'],['P uap butana',f(p4,2)+' atm'],['Uap pada 1 atm',f(V/1000,2)+' m³']]);
+  $('n_lpg').innerHTML='Tekanan campuran dihitung dengan hukum Raoult. Bila isi tabung '+f(m,1)+' kg diuapkan seluruhnya pada 1 atm dan '+f(t,0)+' °C, volumenya sekitar <b>'+f(V,0)+' L</b> (gas ideal: PV = nRT dengan n = '+f(n,1)+' mol). Selama cairan masih ada, tekanan <b>tidak</b> turun walaupun isi berkurang; tekanan baru turun ketika cairan habis.';}
+ ['lX','lT','lm'].forEach(i=>$('ap_'+i).oninput=lpg);lpg();
+ /* balon udara */
+ const Mu=28.97;
+ ctls('c_bal',[{id:'aV',l:'Volume balon',min:1500,max:4000,st:50,v:2800},{id:'aTo',l:'Suhu udara luar',min:0,max:40,st:1,v:25},{id:'aTi',l:'Suhu udara dalam',min:50,max:120,st:1,v:100},{id:'aH',l:'Ketinggian',min:0,max:3000,st:100,v:0},{id:'aW',l:'Massa beban',min:200,max:1500,st:25,v:600}]);
+ function bal(){const V=val('aV'),To=val('aTo')+273.15,Ti=val('aTi')+273.15,h=val('aH'),W=val('aW');
+  out('aV',V,0,'m³');out('aTo',val('aTo'),0,'°C');out('aTi',val('aTi'),0,'°C');out('aH',h,0,'m');out('aW',W,0,'kg');
+  const P=Math.exp(-Mu/1000*9.80665*h/(Rj*To)),ro_=P*Mu/(R*To),ri=P*Mu/(R*Ti),lift=(ro_-ri)*V,net=lift-W;
+  const Tmin=W>=ro_*V?NaN:P*Mu/(R*(ro_-W/V));
+  ro('r_bal',[['ρ udara luar',f(ro_,3)+' kg/m³'],['ρ udara dalam',f(ri,3)+' kg/m³'],['Daya angkat',f(lift,0)+' kg'],['Beban',f(W,0)+' kg'],['Selisih',f(net,0)+' kg'],['Suhu dalam minimum',isFinite(Tmin)?f(Tmin-273.15,0)+' °C':'tak mungkin']]);
+  $('n_bal').innerHTML=(net>=0?'Balon <b>dapat naik</b>: daya angkat melebihi beban sebesar '+f(net,0)+' kg.':'Balon <b>belum dapat naik</b>: daya angkat kurang '+f(-net,0)+' kg dari beban.')+' Tekanan udara pada ketinggian ini '+f(P,3)+' atm (model atmosfer isotermal).';}
+ ['aV','aTo','aTi','aH','aW'].forEach(i=>$('ap_'+i).oninput=bal);bal();
+ /* scuba */
+ ctls('c_sc',[{id:'sD',l:'Kedalaman',min:0,max:60,st:1,v:20},{id:'sV',l:'Udara di paru',min:1,max:6,st:.5,v:3},{id:'sR',l:'Laju napas (RMV)',min:10,max:40,st:1,v:20},{id:'sK',l:'Tangki (200 bar)',sel:[['10','10 L'],['12','12 L'],['15','15 L']],v:'12'}]);
+ function sc(){const d=val('sD'),V=val('sV'),RMV=val('sR'),tk=val('sK');
+  out('sD',d,0,'m');out('sV',V,1,'L');out('sR',RMV,0,'L/min');
+  const P=1+1025*9.80665*d/101325,V0=V*P,pO=0.21*P,Vf=tk*200/PA,t=Vf/(RMV*P),mod=(1.4/0.21-1)*101325/(1025*9.80665);
+  ro('r_sc',[['Tekanan total',f(P,2)+' atm'],['pO₂ (udara)',f(pO,2)+' atm'],['Naik sambil menahan napas',f(V0,1)+' L'],['Udara tangki (1 atm)',f(Vf,0)+' L'],['Lama napas di kedalaman',f(t,0)+' menit'],['Batas pO₂ 1,4 atm',f(mod,0)+' m']]);
+  $('n_sc').innerHTML='Volume udara paru '+f(V,1)+' L di '+f(d,0)+' m akan menjadi <b>'+f(V0,1)+' L</b> bila penyelam naik ke permukaan sambil menahan napas, sesuai P₁V₁ = P₂V₂. '+(V0>6?'Melebihi kapasitas paru: berisiko barotrauma. ':'')+(pO>1.4?'<b>pO₂ melebihi 1,4 atm</b>: bahaya keracunan oksigen pada udara biasa. ':'')+'Waktu tangki dihitung kasar (tanpa cadangan) dengan menganggap udara tangki gas ideal.';}
+ ['sD','sV','sR','sK'].forEach(i=>$('ap_'+i).oninput=sc);sc();
+})();
+
+/* ---------- tab ---------- */
+const tabs=[...document.querySelectorAll('#tabs button')];let cur='pen';
+const STATIC={kin:()=>drawKin(),pro:()=>drawPro(),real:()=>drawReal()};
+function redraw(){if(STATIC[cur])STATIC[cur]();}
+function show(id){cur=id;
+ tabs.forEach(b=>{const on=b.dataset.t===id;b.setAttribute('aria-selected',on);b.tabIndex=on?0:-1});
+ document.querySelectorAll('.sec').forEach(s=>s.classList.toggle('on',s.id===id));redraw();}
+tabs.forEach((b,i)=>{b.onclick=()=>show(b.dataset.t);
+ b.onkeydown=e=>{let j=-1;if(e.key==='ArrowRight')j=(i+1)%tabs.length;if(e.key==='ArrowLeft')j=(i-1+tabs.length)%tabs.length;
+  if(j>=0){e.preventDefault();tabs[j].focus();show(tabs[j].dataset.t)}}});
+$('thm').onclick=()=>{const d=document.documentElement;const dark=d.dataset.theme?d.dataset.theme==='dark':matchMedia('(prefers-color-scheme:dark)').matches;d.dataset.theme=dark?'light':'dark';redraw()};
+matchMedia('(prefers-color-scheme:dark)').addEventListener&&matchMedia('(prefers-color-scheme:dark)').addEventListener('change',redraw);
+
+/* ---------- SIMULASI ---------- */
+const MD={
+free:{l:'Bebas',t:'Isoterm tiap suhu: P = nRT/V',d:'Ubah T, V, dan n bebas. Tekanan dihitung dari PV = nRT. Kurva putus-putus menunjukkan isoterm pada suhu lebih rendah (0,65×) dan lebih tinggi (1,5×).',m:'Tekanan adalah rata-rata dari banyaknya tumbukan per detik dan kerasnya tumbukan ke piston.',s:{n:1,T:300,V:5},dr:'V',ck:{l:'PV/nT',u:'L·atm/(mol·K)',fn:s=>s.P*s.V/(s.n*s.T),d:4},ch:'Dengan V tetap, jadikan T dua kali lipat (300 → 600 K). Prediksikan P, lalu cek. Lalu coba naikkan n: apa yang terjadi pada P?'},
+boyle:{l:'Boyle',t:'Hukum Boyle: P vs V (T tetap)',d:'T = 300 K dan n = 1 mol tetap. Tekan piston (V turun) dan tekanan naik: P·V tetap, kurvanya hiperbola.',m:'Suhu tetap berarti laju molekul tetap. Ruang menyempit, sehingga tumbukan ke dinding makin sering dan P naik.',s:{n:1,T:300,V:5},dr:'V',lim:[1,10],ck:{l:'P × V',u:'L·atm',fn:s=>s.P*s.V,d:2},ch:'Jika V dijadikan setengahnya (5 → 2,5 L), berapa P? Prediksi dulu, lalu geser slider.'},
+charles:{l:'Charles',t:'Hukum Charles: V vs T (P tetap)',d:'P = 5 atm dan n = 1 mol tetap. Naikkan T dan piston terdorong naik. Garis lurus; perpanjangan (putus-putus) menuju V = 0 pada T = 0 K.',m:'Molekul makin cepat dan menumbuk lebih keras, sehingga piston naik sampai tumbukan per luas kembali menyamai 5 atm.',s:{n:1,P:5,T:300},dr:'T',lim:[100,600],ck:{l:'V / T',u:'L/K',fn:s=>s.V/s.T,d:4},ch:'Jika T naik dari 300 K menjadi 600 K, apakah V dua kali lipat? Mengapa rumusnya harus memakai kelvin, bukan °C?'},
+gay:{l:'Gay-Lussac',t:'Hukum Gay-Lussac: P vs T (V tetap)',d:'V = 5 L dan n = 1 mol tetap. Naikkan T dan tekanan naik lurus. Garis menuju P = 0 pada T = 0 K.',m:'Volume tetap, tetapi molekul makin cepat: lebih sering dan lebih keras menumbuk dinding, sehingga P naik.',s:{n:1,V:5,T:300},dr:'T',lim:[100,1000],ck:{l:'P / T',u:'atm/K',fn:s=>s.P/s.T,d:4},ch:'Mengapa kaleng aerosol atau tabung gas yang tertutup berbahaya jika dipanaskan?'},
+avo:{l:'Avogadro',t:'Hukum Avogadro: V vs n (P, T tetap)',d:'P = 4 atm dan T = 200 K tetap. Tambah mol gas dan volume naik lurus: jumlah molekul yang sama menempati volume yang sama.',m:'Tambahan molekul menambah tumbukan, jadi piston naik sampai tekanan kembali 4 atm.',s:{T:200,P:4,n:1},dr:'n',lim:[0.5,2.4],ck:{l:'V / n',u:'L/mol',fn:s=>s.V/s.n,d:3},ch:'Jika n dijadikan dua kali lipat, V menjadi berapa? Mengapa tekanan tidak ikut naik?'}};
+let mode='free',S={n:1,T:300,V:5,P:0},vv=5,paused=false,rows=[],PT=[];
+const sl={T:$('sT'),V:$('sV'),n:$('sN')},ou={T:$('oT'),V:$('oV'),n:$('oN')},un={T:' K',V:' L',n:' mol'};
+const mb=$('modes');
+Object.keys(MD).forEach(k=>{const b=document.createElement('button');b.type='button';b.textContent=MD[k].l;b.setAttribute('aria-selected',k==='free');b.onclick=()=>setMode(k);b.id='m_'+k;mb.appendChild(b)});
+function setMode(k){
+ mode=k;const m=MD[k];Object.keys(MD).forEach(x=>$('m_'+x).setAttribute('aria-selected',x===k));
+ S=Object.assign({n:1,T:300,V:5,P:0},m.s);
+ sl.T.min=100;sl.T.max=1000;sl.V.min=1;sl.V.max=10;sl.n.min=.5;sl.n.max=3;
+ if(m.lim){sl[m.dr].min=m.lim[0];sl[m.dr].max=m.lim[1]}
+ ['T','V','n'].forEach(v=>{sl[v].disabled=(k!=='free'&&v!==m.dr)});
+ sl.T.value=S.T;sl.V.value=S.V;sl.n.value=S.n;
+ $('mt').textContent=m.t;$('md').textContent=m.d;$('mm').textContent=m.m;$('ch').textContent=m.ch;
+ rows=[];renderRows();calc();vv=S.V;}
+function calc(){
+ const m=MD[mode];
+ if(mode==='free'){S.T=+sl.T.value;S.V=+sl.V.value;S.n=+sl.n.value;S.P=S.n*R*S.T/S.V}
+ else{S[m.dr]=+sl[m.dr].value;
+  if(mode==='boyle'||mode==='gay'){S.P=S.n*R*S.T/S.V}
+  else{S.P=m.s.P;S.V=S.n*R*S.T/S.P}}
+ ['T','V','n'].forEach(v=>{if(+sl[v].value!==S[v])sl[v].value=S[v];ou[v].textContent=f(S[v],v==='T'?0:2)+un[v]});
+ $('rP').textContent=f(S.P,2)+' atm';$('rV').textContent=f(S.V,2)+' L';$('rT').textContent=f(S.T,0)+' K';$('rN').textContent=f(S.n,2)+' mol';
+ const L=S.P*S.V,Rr=S.n*R*S.T;
+ $('eq').innerHTML='PV = '+f(S.P,2)+' atm × '+f(S.V,2)+' L = <b>'+f(L,1)+' L·atm</b><br>nRT = '+f(S.n,2)+' mol × 0,08206 L·atm/(mol·K) × '+f(S.T,0)+' K = <b>'+f(Rr,1)+' L·atm</b>';
+ syncParts();}
+['T','V','n'].forEach(v=>sl[v].oninput=calc);
+$('bPause').onclick=()=>{paused=!paused;$('bPause').textContent=paused?'▶ Lanjut':'⏸ Jeda'};
+$('bRec').onclick=()=>{if(rows.length>=10)rows.shift();rows.push(Object.assign({},S));renderRows()};
+$('bClr').onclick=()=>{rows=[];renderRows()};
+function renderRows(){
+ const ck=MD[mode].ck;
+ if(!rows.length){$('tbl').innerHTML='<table><tr><th>Belum ada data</th></tr></table>';$('tnote').textContent='Catat minimal 3 data dengan menggeser slider.';return}
+ let h='<table><tr><th>No</th><th>P (atm)</th><th>V (L)</th><th>T (K)</th><th>n (mol)</th><th>'+ck.l+' ('+ck.u+')</th></tr>';
+ const vals=rows.map(r=>ck.fn(r));
+ rows.forEach((r,i)=>{h+='<tr><td>'+(i+1)+'</td><td>'+f(r.P,2)+'</td><td>'+f(r.V,2)+'</td><td>'+f(r.T,0)+'</td><td>'+f(r.n,2)+'</td><td><b>'+f(vals[i],ck.d)+'</b></td></tr>'});
+ $('tbl').innerHTML=h+'</table>';
+ if(rows.length<3){$('tnote').textContent='Catat minimal 3 data dengan menggeser slider.';return}
+ const mn=Math.min(...vals),mx=Math.max(...vals),mean=vals.reduce((a,b)=>a+b,0)/vals.length,sp=(mx-mn)/mean*100;
+ $('tnote').innerHTML=sp<1?'Kolom <b>'+ck.l+'</b> hampir sama (selisih '+f(sp,2)+'%): <b>hubungan terbukti konstan</b> selama variabel lain dijaga tetap.':'Kolom '+ck.l+' bervariasi ('+f(sp,1)+'%): pada mode bebas, beberapa variabel berubah sekaligus, jadi pilih mode hukum tertentu.';}
+
+/* partikel */
+const BX=70,BW=380,TOP=36,MH=300;let PA=[],flash=0;
+function syncParts(){const want=Math.round(S.n*14);while(PA.length<want){const a=Math.random()*6.283;PA.push({x:Math.random()*BW,y:Math.random()*30,ux:Math.cos(a),uy:Math.sin(a),k:.5+Math.random()})}PA.length=want}
+const cx=mk('cs',520,380);
+function drawSim(dt){
+ vv=rm?S.V:vv+(S.V-vv)*Math.min(1,dt*8+(dt===0?1:0));
+ const bh=vv/10*MH,y0=TOP+MH-bh,sp=9*Math.sqrt(S.T);
+ cx.clearRect(0,0,520,380);const ac=css('--ac'),tx=css('--tx'),mu=css('--mut'),a2=css('--ac2');
+ const hf=(S.T-100)/900;cx.fillStyle=`hsl(${25-hf*10},95%,${28+hf*30}%)`;cx.fillRect(BX-6,TOP+MH,BW+12,22);
+ cx.fillStyle=tx;cx.font='12px sans-serif';cx.textAlign='left';cx.fillText('Pemanas '+f(S.T,0)+' K',BX+4,TOP+MH+16);
+ cx.strokeStyle=mu;cx.lineWidth=3;cx.beginPath();cx.moveTo(BX,TOP);cx.lineTo(BX,TOP+MH);cx.lineTo(BX+BW,TOP+MH);cx.lineTo(BX+BW,TOP);cx.stroke();
+ flash=Math.max(0,flash-dt*3);cx.fillStyle=ac;cx.globalAlpha=.55+.45*Math.min(1,flash);cx.fillRect(BX,y0-10,BW,10);cx.globalAlpha=1;
+ cx.fillStyle=mu;cx.fillRect(BX+BW/2-6,TOP-30,12,y0-TOP+20);
+ const na=Math.max(1,Math.min(7,Math.round(Math.log2(1+S.P))));cx.strokeStyle=a2;cx.fillStyle=a2;cx.lineWidth=2;
+ for(let i=0;i<na;i++){const x=BX+BW*(i+1)/(na+1);cx.beginPath();cx.moveTo(x,y0+4);cx.lineTo(x,y0+22);cx.stroke();cx.beginPath();cx.moveTo(x-4,y0+17);cx.lineTo(x,y0+24);cx.lineTo(x+4,y0+17);cx.fill()}
+ PA.forEach(p=>{if(!paused){p.x+=p.ux*p.k*sp*dt;p.y+=p.uy*p.k*sp*dt}
+  if(p.x<4){p.x=4;p.ux=Math.abs(p.ux)}if(p.x>BW-4){p.x=BW-4;p.ux=-Math.abs(p.ux)}
+  if(p.y<4){p.y=4;p.uy=Math.abs(p.uy);flash=1}if(p.y>bh-4){p.y=Math.max(4,bh-4);p.uy=-Math.abs(p.uy)}
+  const t=Math.min(1,p.k*Math.sqrt(S.T/1000)/1.25);cx.fillStyle=`hsl(${215-t*215},90%,58%)`;cx.beginPath();cx.arc(BX+p.x,y0+p.y,4.5,0,6.283);cx.fill()});
+ cx.fillStyle=mu;cx.font='12px sans-serif';cx.textAlign='left';cx.fillText('V = '+f(S.V,1)+' L',BX+BW+4,y0+14);
+ cx.strokeStyle=mu;cx.lineWidth=1;cx.strokeRect(14,TOP,20,MH);const fr=Math.min(1,Math.log10(1+S.P)/Math.log10(251));
+ cx.fillStyle=a2;cx.fillRect(15,TOP+MH-fr*MH,18,fr*MH);cx.fillStyle=tx;cx.fillText('P',20,TOP-6);
+ cx.fillText(f(S.P,1)+' atm',4,TOP+MH+38);cx.fillStyle=mu;cx.fillText('skala log',2,TOP-20);
+}
+const gx=mk('cg',520,380);
+function gCfg(){const n=S.n,T=S.T;
+ if(mode==='free'||mode==='boyle')return{xl:'V (L)',yl:'P (atm)',x0:1,x1:10,y1:mode==='boyle'?40:nice(S.P*1.25,[5,10,20,40,80,160,320]),f:x=>n*R*T/x,px:S.V,py:S.P,gh:[.65,1.5]};
+ if(mode==='charles')return{xl:'T (K)',yl:'V (L)',x0:0,x1:600,y1:10,f:x=>n*R*x/5,px:S.T,py:S.V,ext:100};
+ if(mode==='gay')return{xl:'T (K)',yl:'P (atm)',x0:0,x1:1000,y1:20,f:x=>n*R*x/5,px:S.T,py:S.P,ext:100};
+ return{xl:'n (mol)',yl:'V (L)',x0:0,x1:2.5,y1:10,f:x=>x*R*200/4,px:S.n,py:S.V,ext:.5}}
+function tk(v){return v<10&&v%1!==0?f(v,1):f(v,0)}
+function drawGraph(){
+ const ac=css('--ac'),tx=css('--tx'),mu=css('--mut'),gr=css('--grid'),a2=css('--ac2'),g=gCfg();
+ const W=520,H=380,l=52,r=14,t=16,b=44,pw=W-l-r,ph=H-t-b,X=x=>l+(x-g.x0)/(g.x1-g.x0)*pw,Y=y=>t+ph-y/g.y1*ph;
+ gx.clearRect(0,0,W,H);gx.font='12px sans-serif';gx.lineWidth=1;
+ for(let i=0;i<=5;i++){const xv=g.x0+(g.x1-g.x0)*i/5,yv=g.y1*i/5;
+  gx.strokeStyle=gr;gx.beginPath();gx.moveTo(X(xv),t);gx.lineTo(X(xv),t+ph);gx.moveTo(l,Y(yv));gx.lineTo(l+pw,Y(yv));gx.stroke();
+  gx.fillStyle=mu;gx.textAlign='center';gx.fillText(tk(xv),X(xv),t+ph+16);gx.textAlign='right';gx.fillText(tk(yv),l-6,Y(yv)+4)}
+ gx.textAlign='center';gx.fillStyle=tx;gx.fillText(g.xl,l+pw/2,H-6);gx.save();gx.translate(12,t+ph/2);gx.rotate(-1.5708);gx.fillText(g.yl,0,0);gx.restore();
+ gx.strokeStyle=tx;gx.lineWidth=1.5;gx.strokeRect(l,t,pw,ph);
+ const curve=(fn,c,w,dash,xa,xb)=>{gx.strokeStyle=c;gx.lineWidth=w;gx.setLineDash(dash||[]);gx.beginPath();for(let i=0;i<=140;i++){const x=xa+(xb-xa)*i/140;i?gx.lineTo(X(x),Y(fn(x))):gx.moveTo(X(x),Y(fn(x)))}gx.stroke();gx.setLineDash([])};
+ gx.save();gx.beginPath();gx.rect(l,t,pw,ph);gx.clip();
+ if(g.gh)g.gh.forEach(k=>curve(x=>S.n*R*S.T*k/x,mu,1.5,[5,4],g.x0,g.x1));
+ if(g.ext){curve(g.f,mu,2,[6,4],g.x0,g.ext);curve(g.f,ac,3,null,g.ext,g.x1)}else curve(g.f,ac,3,null,g.x0,g.x1);
+ gx.restore();
+ gx.strokeStyle=a2;gx.lineWidth=1;gx.setLineDash([4,4]);gx.beginPath();gx.moveTo(X(g.px),Y(g.py));gx.lineTo(X(g.px),t+ph);gx.moveTo(X(g.px),Y(g.py));gx.lineTo(l,Y(g.py));gx.stroke();gx.setLineDash([]);
+ gx.fillStyle=a2;gx.beginPath();gx.arc(X(g.px),Y(Math.min(g.py,g.y1)),7,0,6.283);gx.fill();
+}
+
+/* ---------- TEORI KINETIK ---------- */
+const ck=mk('ck',520,320);
+fillSel('kG','N₂');fillSel('kG2','',true);
+const mbf=(v,T,M)=>4*Math.PI*Math.pow(M/(2*Math.PI*Rj*T),1.5)*v*v*Math.exp(-M*v*v/(2*Rj*T));
+function drawKin(){
+ const T=+$('kT').value,M1=+$('kG').value/1000,v2=$('kG2').value,M2=v2?+v2/1000:0;
+ const Ml=Math.min(M1,M2||M1),Mh=Math.max(M1,M2||M1);
+ const xm=nice(Math.sqrt(3*Rj*1000/Ml)*2,[1000,1500,2000,3000,4000,6000,8000]);
+ const kv=$('kv');kv.max=xm;if(+kv.value>xm)kv.value=Math.round(xm/4/10)*10;const v0=+kv.value;
+ const ac=css('--ac'),tx=css('--tx'),mu=css('--mut'),gr=css('--grid'),a2=css('--ac2'),g2=css('--g2');
+ $('koT').textContent=T+' K';$('kov').textContent=v0+' m/s';
+ const W=520,H=320,l=56,r=14,t=16,b=44,pw=W-l-r,ph=H-t-b,ym=mbf(Math.sqrt(2*Rj*100/Mh),100,Mh)*1.1,X=v=>l+v/xm*pw,Y=y=>t+ph-Math.min(y/ym,1.02)*ph;
+ ck.clearRect(0,0,W,H);ck.font='12px sans-serif';ck.lineWidth=1;
+ const st=xm<=3000?500:1000;
+ for(let v=0;v<=xm;v+=st){ck.strokeStyle=gr;ck.beginPath();ck.moveTo(X(v),t);ck.lineTo(X(v),t+ph);ck.stroke();ck.fillStyle=mu;ck.textAlign='center';ck.fillText(v,X(v),t+ph+16)}
+ ck.fillStyle=tx;ck.textAlign='center';ck.fillText('laju molekul v (m/s)',l+pw/2,H-6);ck.save();ck.translate(12,t+ph/2);ck.rotate(-1.5708);ck.fillText('f(v)  (luas = 1)',0,0);ck.restore();
+ ck.strokeStyle=tx;ck.lineWidth=1.5;ck.strokeRect(l,t,pw,ph);
+ const fn=v=>mbf(v,T,M1);
+ ck.beginPath();ck.moveTo(X(v0),Y(0));for(let v=v0;v<=xm;v+=10)ck.lineTo(X(v),Y(fn(v)));ck.lineTo(X(xm),Y(0));ck.closePath();ck.fillStyle=a2;ck.globalAlpha=.3;ck.fill();ck.globalAlpha=1;
+ const line=(F,c,w,d)=>{ck.strokeStyle=c;ck.lineWidth=w;ck.setLineDash(d||[]);ck.beginPath();for(let v=0;v<=xm;v+=10)v?ck.lineTo(X(v),Y(F(v))):ck.moveTo(X(v),Y(F(v)));ck.stroke();ck.setLineDash([])};
+ line(fn,ac,3);if(M2)line(v=>mbf(v,T,M2),g2,2.5,[6,4]);
+ ck.strokeStyle=a2;ck.lineWidth=1.5;ck.beginPath();ck.moveTo(X(v0),t);ck.lineTo(X(v0),t+ph);ck.stroke();ck.fillStyle=a2;ck.textAlign='left';ck.fillText('v₀',X(v0)+3,t+ph-6);
+ const vp=Math.sqrt(2*Rj*T/M1),va=Math.sqrt(8*Rj*T/(Math.PI*M1)),vr=Math.sqrt(3*Rj*T/M1);
+ [[vp,'v mp',a2],[va,'v rata²',tx],[vr,'v rms','#d946ef']].forEach(([v,n,c],i)=>{if(v>xm)return;ck.strokeStyle=c;ck.lineWidth=1.5;ck.setLineDash([4,3]);ck.beginPath();ck.moveTo(X(v),t+ph);ck.lineTo(X(v),Y(fn(v)));ck.stroke();ck.setLineDash([]);ck.fillStyle=c;ck.textAlign='left';ck.fillText(n,X(v)+3,t+14+i*14)});
+ ck.fillStyle=ac;ck.textAlign='right';ck.fillText('— '+gname(+$('kG').value)+(M2?'':''),l+pw-6,t+14);if(M2){ck.fillStyle=g2;ck.fillText('-- '+gname(v2),l+pw-6,t+28)}
+ let area=0;for(let v=v0;v<=xm*4;v+=2)area+=fn(v)*2;area=Math.min(1,area);
+ const ek=1.5*kB*T;
+ $('kr').innerHTML='<div>v mp<b>'+f(vp,0)+' m/s</b></div><div>v rata-rata<b>'+f(va,0)+' m/s</b></div><div>v rms<b>'+f(vr,0)+' m/s</b></div><div>Ek rata-rata<b>'+sci(ek,2)+' J</b></div>';
+ $('kfrac').innerHTML='Sekitar <b>'+f(area*100,1)+'%</b> molekul '+gname(+$('kG').value)+' pada '+T+' K bergerak lebih cepat dari '+v0+' m/s (daerah berarsir). Energi kinetik translasi 1 mol: (3/2)RT = <b>'+f(1.5*Rj*T/1000,2)+' kJ</b>.';
+ let h='<table><tr><th>Gas</th><th>M (g/mol)</th><th>v mp (m/s)</th><th>v rata-rata (m/s)</th><th>v rms (m/s)</th></tr>';
+ GL.forEach(gg=>{const M=gg[1]/1000;h+='<tr><td>'+gg[0]+'</td><td>'+f(gg[1],2)+'</td><td>'+f(Math.sqrt(2*Rj*T/M),0)+'</td><td>'+f(Math.sqrt(8*Rj*T/(Math.PI*M)),0)+'</td><td>'+f(Math.sqrt(3*Rj*T/M),0)+'</td></tr>'});
+ $('ktab').innerHTML=h+'</table>';
+}
+['kT','kG','kG2','kv'].forEach(i=>$(i).oninput=drawKin);
+
+/* ---------- PROSES ---------- */
+const cp=mk('cp',520,340);
+$('pm').onchange=()=>{const k=$('pm').value,x=$('pX');
+ if(k==='iso'||k==='bar'){$('pXl').textContent='Volume akhir V₂';x.min=1;x.max=10;x.step=.1;x.value=k==='iso'?2:8}
+ else{$('pXl').textContent='Suhu akhir T₂';x.min=100;x.max=900;x.step=10;x.value=500}drawPro()};
+['pn','pT','pV','pX'].forEach(i=>$(i).oninput=drawPro);
+function drawPro(){
+ const n=+$('pn').value,T1=+$('pT').value,V1=+$('pV').value,k=$('pm').value,X0=+$('pX').value;
+ const P1=n*R*T1/V1;let V2,T2;
+ if(k==='iso'){V2=X0;T2=T1}else if(k==='bar'){V2=X0;T2=P1*V2/(n*R)}else{V2=V1;T2=X0}
+ const P2=n*R*T2/V2;
+ const Wl=k==='iso'?n*R*T1*Math.log(V2/V1):k==='bar'?P1*(V2-V1):0,WJ=Wl*LATM;
+ $('opn').textContent=f(n,1)+' mol';$('opT').textContent=T1+' K';$('opV').textContent=f(V1,1)+' L';$('opX').textContent=k==='khor'?X0+' K':f(X0,1)+' L';
+ const ac=css('--ac'),tx=css('--tx'),mu=css('--mut'),gr=css('--grid'),a2=css('--ac2');
+ const y1=nice(Math.max(P1,P2)*1.25,[2,5,10,20,50,100,200,400]),x0=0,x1=10;
+ const W=520,H=340,l=52,r=14,t=16,b=44,pw=W-l-r,ph=H-t-b,X=x=>l+(x-x0)/(x1-x0)*pw,Y=y=>t+ph-y/y1*ph;
+ cp.clearRect(0,0,W,H);cp.font='12px sans-serif';cp.lineWidth=1;
+ for(let i=0;i<=5;i++){const xv=2*i,yv=y1*i/5;cp.strokeStyle=gr;cp.beginPath();cp.moveTo(X(xv),t);cp.lineTo(X(xv),t+ph);cp.moveTo(l,Y(yv));cp.lineTo(l+pw,Y(yv));cp.stroke();
+  cp.fillStyle=mu;cp.textAlign='center';cp.fillText(xv,X(xv),t+ph+16);cp.textAlign='right';cp.fillText(tk(yv),l-6,Y(yv)+4)}
+ cp.textAlign='center';cp.fillStyle=tx;cp.fillText('V (L)',l+pw/2,H-6);cp.save();cp.translate(12,t+ph/2);cp.rotate(-1.5708);cp.fillText('P (atm)',0,0);cp.restore();
+ cp.strokeStyle=tx;cp.lineWidth=1.5;cp.strokeRect(l,t,pw,ph);
+ cp.save();cp.beginPath();cp.rect(l,t,pw,ph);cp.clip();
+ const iso=(T,c)=>{cp.strokeStyle=c;cp.lineWidth=1.2;cp.setLineDash([5,4]);cp.beginPath();for(let i=0;i<=100;i++){const v=.4+9.6*i/100,p=n*R*T/v;i?cp.lineTo(X(v),Y(p)):cp.moveTo(X(v),Y(p))}cp.stroke();cp.setLineDash([])};
+ iso(T1,mu);if(Math.abs(T2-T1)>1)iso(T2,mu);
+ const pts=[];if(k==='iso'){for(let i=0;i<=60;i++){const v=V1+(V2-V1)*i/60;pts.push([v,n*R*T1/v])}}else pts.push([V1,P1],[V2,P2]);
+ if(k!=='khor'){cp.beginPath();cp.moveTo(X(V1),Y(0));pts.forEach(p=>cp.lineTo(X(p[0]),Y(p[1])));cp.lineTo(X(V2),Y(0));cp.closePath();cp.fillStyle=a2;cp.globalAlpha=.28;cp.fill();cp.globalAlpha=1}
+ cp.strokeStyle=ac;cp.lineWidth=3.5;cp.beginPath();pts.forEach((p,i)=>i?cp.lineTo(X(p[0]),Y(p[1])):cp.moveTo(X(p[0]),Y(p[1])));cp.stroke();
+ cp.restore();
+ [[V1,P1,'1'],[V2,P2,'2']].forEach(p=>{cp.fillStyle=a2;cp.beginPath();cp.arc(X(p[0]),Y(p[1]),7,0,6.283);cp.fill();cp.fillStyle=tx;cp.textAlign='left';cp.font='bold 13px sans-serif';cp.fillText(p[2],X(p[0])+10,Y(p[1])-8)});cp.font='12px sans-serif';
+ $('pr').className='ro';
+ $('pr').innerHTML='<div>Keadaan 1<b>'+f(P1,2)+' atm · '+f(V1,2)+' L · '+f(T1,0)+' K</b></div><div>Keadaan 2<b>'+f(P2,2)+' atm · '+f(V2,2)+' L · '+f(T2,0)+' K</b></div><div>W oleh gas<b>'+f(Wl,2)+' L·atm</b></div><div>W (joule)<b>'+f(WJ,0)+' J</b></div>';
+ const nt={iso:'Isoterm: P₁V₁ = '+f(P1*V1,2)+' L·atm = P₂V₂ = '+f(P2*V2,2)+' L·atm. W = nRT ln(V₂/V₁). ΔU = 0 untuk gas ideal.',bar:'Isobar: V/T = '+f(V1/T1,4)+' L/K sebelum dan '+f(V2/T2,4)+' L/K sesudah. W = P·ΔV.',khor:'Isokhor: P/T = '+f(P1/T1,4)+' atm/K sebelum dan '+f(P2/T2,4)+' atm/K sesudah. Volume tetap, jadi tidak ada kerja ekspansi.'}[k];
+ $('pnote').textContent=nt+(Wl<0?' W negatif: gas dikompresi (kerja dilakukan pada gas).':'');
+}
+
+/* ---------- DALTON ---------- */
+const cm=mk('cm',520,240);let MP=[];
+['dgA','dgB','dgC'].forEach((id,i)=>fillSel(id,['N₂','O₂','Ar'][i]));
+const MC=['--g1','--g2','--g3'];
+function dstate(){const V=+$('dV').value,T=+$('dT').value,n=[+$('dA').value,+$('dB').value,+$('dC').value],M=[+$('dgA').value,+$('dgB').value,+$('dgC').value],nt=n[0]+n[1]+n[2],Pt=nt*R*T/V;return{V,T,n,M,nt,Pt,Pi:n.map(x=>x*R*T/V),x:n.map(v=>nt?v/nt:0)}}
+function dupd(){
+ const d=dstate();$('odV').textContent=d.V+' L';$('odT').textContent=d.T+' K';['A','B','C'].forEach((c,i)=>$('od'+c).textContent=f(d.n[i],1)+' mol');
+ const names=[0,1,2].map(i=>gname(d.M[i]));
+ let h='<table><tr><th>Gas</th><th>n (mol)</th><th>Fraksi mol x</th><th>P parsial (atm)</th></tr>';
+ names.forEach((nm,i)=>{h+='<tr><td><span class="dot" style="background:var('+MC[i]+')"></span>'+nm+' (gas '+'ABC'[i]+')</td><td>'+f(d.n[i],1)+'</td><td>'+f(d.x[i],3)+'</td><td>'+f(d.Pi[i],3)+'</td></tr>'});
+ h+='<tr><th>Total</th><th>'+f(d.nt,1)+'</th><th>1,000</th><th>'+f(d.Pt,3)+'</th></tr></table>';$('dtab').innerHTML=h;
+ $('dbar').innerHTML=d.nt?d.x.map((x,i)=>'<div style="width:'+(x*100)+'%;background:var('+MC[i]+')">'+(x>.1?f(x*100,0)+'%':'')+'</div>').join(''):'';
+ $('deq').innerHTML='P<sub>total</sub> = n<sub>total</sub>RT/V = ('+f(d.nt,1)+')(0,08206)('+d.T+')/'+d.V+' = <b>'+f(d.Pt,3)+' atm</b><br>ΣP<sub>i</sub> = '+d.Pi.map(p=>f(p,3)).join(' + ')+' = <b>'+f(d.Pi[0]+d.Pi[1]+d.Pi[2],3)+' atm</b>';
+ const cnt=d.n.map(x=>Math.round(x*10));MP=MP.filter(p=>{if(cnt[p.g]>0){cnt[p.g]--;return true}return false});
+ cnt.forEach((c,g)=>{for(let i=0;i<c;i++){const a=Math.random()*6.283;MP.push({g,x:Math.random()*480,y:Math.random()*200,ux:Math.cos(a),uy:Math.sin(a)})}});
+}
+['dV','dT','dA','dB','dC','dgA','dgB','dgC'].forEach(i=>$(i).oninput=dupd);
+function drawMix(dt){
+ const d=dstate();cm.clearRect(0,0,520,240);const mu=css('--mut');
+ cm.strokeStyle=mu;cm.lineWidth=3;cm.strokeRect(10,10,500,220);
+ const sz=Math.sqrt(d.V/50);
+ MP.forEach(p=>{const sp=40*Math.sqrt(d.T/d.M[p.g]);
+  p.x+=p.ux*sp*dt;p.y+=p.uy*sp*dt;
+  if(p.x<5){p.x=5;p.ux=Math.abs(p.ux)}if(p.x>495){p.x=495;p.ux=-Math.abs(p.ux)}
+  if(p.y<5){p.y=5;p.uy=Math.abs(p.uy)}if(p.y>215){p.y=215;p.uy=-Math.abs(p.uy)}
+  cm.fillStyle=css(MC[p.g]);cm.beginPath();cm.arc(10+p.x,10+p.y,4.5,0,6.283);cm.fill()});
+ cm.fillStyle=css('--tx');cm.font='12px sans-serif';cm.textAlign='left';cm.fillText('P total = '+f(d.Pt,2)+' atm',16,26);
+}
+/* ---------- GRAHAM ---------- */
+const cr=mk('cr',520,170);fillSel('gA','H₂');fillSel('gB','O₂');
+let rt=0,rhold=0;
+function gupd(){const a=+$('gA').value,b=+$('gB').value,ra=Math.sqrt(b/a);
+ $('gres').innerHTML='<div class="big">r('+gname(a)+')/r('+gname(b)+') = '+f(ra,3)+'</div>'+
+ '<div>r<sub>A</sub>/r<sub>B</sub> = √(M<sub>B</sub>/M<sub>A</sub>) = √('+f(b,2)+'/'+f(a,2)+') = '+f(ra,3)+'</div>'+
+ '<div>'+(ra>=1?gname(a)+' berefusi <b>'+f(ra,2)+' kali lebih cepat</b> daripada '+gname(b)+'; waktu efusinya '+f(1/ra,3)+' kali waktu '+gname(b)+'.':gname(b)+' berefusi <b>'+f(1/ra,2)+' kali lebih cepat</b> daripada '+gname(a)+'.')+'</div>'}
+$('gA').oninput=$('gB').oninput=()=>{rt=0;rhold=0;gupd()};$('bRace').onclick=()=>{rt=0;rhold=0};
+function drawRace(dt){
+ const a=+$('gA').value,b=+$('gB').value,ra=1/Math.sqrt(a),rb=1/Math.sqrt(b),mx=Math.max(ra,rb);
+ if(rm)rt=4;else if(rt<4)rt+=dt;else{rhold+=dt;if(rhold>1.5){rt=0;rhold=0}}
+ const pa=Math.min(1,rt/4*ra/mx),pb=Math.min(1,rt/4*rb/mx),W=520,l=70,r=480;
+ cr.clearRect(0,0,W,170);const mu=css('--mut'),tx=css('--tx');cr.font='13px sans-serif';
+ [[45,pa,'--g1',gname(a)],[115,pb,'--g2',gname(b)]].forEach(([y,p,c,nm])=>{
+  cr.strokeStyle=mu;cr.lineWidth=1;cr.setLineDash([3,4]);cr.beginPath();cr.moveTo(l,y);cr.lineTo(r,y);cr.stroke();cr.setLineDash([]);
+  cr.fillStyle=tx;cr.textAlign='right';cr.fillText(nm,l-14,y+4);
+  cr.strokeStyle=css(c);cr.lineWidth=4;cr.beginPath();cr.moveTo(l,y);cr.lineTo(l+(r-l)*p,y);cr.stroke();
+  cr.fillStyle=css(c);cr.beginPath();cr.arc(l+(r-l)*p,y,11,0,6.283);cr.fill()});
+ cr.strokeStyle=css('--ac2');cr.lineWidth=3;cr.beginPath();cr.moveTo(r+10,15);cr.lineTo(r+10,80);cr.moveTo(r+10,95);cr.lineTo(r+10,155);cr.stroke();
+ cr.fillStyle=tx;cr.textAlign='center';cr.fillText('lubang',r+10,86);cr.textAlign='left';cr.fillText('mulai',l-6,163);
+}
+
+/* ---------- GAS NYATA ---------- */
+const VD={He:['He',.0346,.0238],H2:['H₂',.2476,.02661],N2:['N₂',1.370,.0387],O2:['O₂',1.382,.03186],CH4:['CH₄',2.303,.04307],CO2:['CO₂',3.658,.04286],NH3:['NH₃',4.225,.0371]};
+$('rg').innerHTML=Object.keys(VD).map(k=>`<option value="${k}"${k==='CO2'?' selected':''}>${VD[k][0]} (a = ${String(VD[k][1]).replace('.',',')}; b = ${String(VD[k][2]).replace('.',',')})</option>`).join('');
+let rmode='P';const cn=mk('cn',520,340);
+[['P','P vs Vm'],['Z','Z vs Vm']].forEach(([k,l])=>{const b=document.createElement('button');b.type='button';b.textContent=l;b.id='rm_'+k;b.setAttribute('aria-selected',k==='P');b.onclick=()=>{rmode=k;['P','Z'].forEach(x=>$('rm_'+x).setAttribute('aria-selected',x===k));drawReal()};$('rmodes').appendChild(b)});
+['rg','rT','rV'].forEach(i=>$(i).oninput=drawReal);
+function drawReal(){
+ const [nm,a,b]=VD[$('rg').value],T=+$('rT').value,Vm=0.08*Math.pow(10/0.08,+$('rV').value/100);
+ $('orT').textContent=T+' K';$('orV').textContent=f(Vm,2)+' L/mol';
+ const Pi=x=>R*T/x,Pv=x=>R*T/(x-b)-a/(x*x),Zv=x=>x/(x-b)-a/(R*T*x);
+ const ac=css('--ac'),tx=css('--tx'),mu=css('--mut'),gr=css('--grid'),a2=css('--ac2'),g2=css('--g2');
+ const W=520,H=340,l=52,r=14,t=16,bt=44,pw=W-l-r,ph=H-t-bt,x0=.08,x1=10,X=x=>l+Math.log(x/x0)/Math.log(x1/x0)*pw;
+ const y1=rmode==='P'?nice(R*T/.2,[10,20,50,100,200,400,800]):2,Y=y=>t+ph-y/y1*ph;
+ cn.clearRect(0,0,W,H);cn.font='12px sans-serif';cn.lineWidth=1;
+ [.1,.2,.5,1,2,5,10].forEach(v=>{cn.strokeStyle=gr;cn.beginPath();cn.moveTo(X(v),t);cn.lineTo(X(v),t+ph);cn.stroke();cn.fillStyle=mu;cn.textAlign='center';cn.fillText(v<1?f(v,1):f(v,0),X(v),t+ph+16)});
+ for(let i=0;i<=5;i++){const yv=y1*i/5;cn.strokeStyle=gr;cn.beginPath();cn.moveTo(l,Y(yv));cn.lineTo(l+pw,Y(yv));cn.stroke();cn.fillStyle=mu;cn.textAlign='right';cn.fillText(tk(yv),l-6,Y(yv)+4)}
+ cn.textAlign='center';cn.fillStyle=tx;cn.fillText('Vm (L/mol), skala log',l+pw/2,H-6);cn.save();cn.translate(12,t+ph/2);cn.rotate(-1.5708);cn.fillText(rmode==='P'?'P (atm)':'Z = PVm/RT',0,0);cn.restore();
+ cn.strokeStyle=tx;cn.lineWidth=1.5;cn.strokeRect(l,t,pw,ph);
+ const crv=(F,c,w,d)=>{cn.strokeStyle=c;cn.lineWidth=w;cn.setLineDash(d||[]);cn.beginPath();for(let i=0;i<=200;i++){const x=x0*Math.pow(x1/x0,i/200);i?cn.lineTo(X(x),Y(F(x))):cn.moveTo(X(x),Y(F(x)))}cn.stroke();cn.setLineDash([])};
+ cn.save();cn.beginPath();cn.rect(l,t,pw,ph);cn.clip();
+ if(rmode==='P'){crv(Pi,mu,2,[6,4]);crv(Pv,ac,3)}else{crv(()=>1,mu,2,[6,4]);crv(Zv,ac,3)}
+ cn.restore();
+ const pt=(x,y,c)=>{cn.fillStyle=c;cn.beginPath();cn.arc(X(x),Y(Math.max(0,Math.min(y,y1))),6,0,6.283);cn.fill()};
+ cn.strokeStyle=a2;cn.lineWidth=1;cn.setLineDash([4,4]);cn.beginPath();cn.moveTo(X(Vm),t);cn.lineTo(X(Vm),t+ph);cn.stroke();cn.setLineDash([]);
+ if(rmode==='P'){pt(Vm,Pi(Vm),mu);pt(Vm,Pv(Vm),a2)}else{pt(Vm,1,mu);pt(Vm,Zv(Vm),a2)}
+ cn.textAlign='right';cn.fillStyle=mu;cn.fillText('-- gas ideal',l+pw-8,t+16);cn.fillStyle=ac;cn.fillText('— '+nm+' (van der Waals)',l+pw-8,t+31);
+ const Z=Zv(Vm),dev=(Z-1)*100,Tc=8*a/(27*R*b);
+ $('rr').className='ro';
+ $('rr').innerHTML='<div>P ideal<b>'+f(Pi(Vm),2)+' atm</b></div><div>P van der Waals<b>'+f(Pv(Vm),2)+' atm</b></div><div>Z<b>'+f(Z,3)+'</b></div><div>T kritis (vdW)<b>'+f(Tc,0)+' K</b></div>';
+ $('rnote').innerHTML=(Math.abs(dev)<5?'<b>Z = '+f(Z,3)+'</b>: penyimpangan hanya '+f(Math.abs(dev),1)+'%, gas '+nm+' pada kondisi ini <b>cukup baik dianggap ideal</b>.':'<b>Z = '+f(Z,3)+'</b>: menyimpang '+f(Math.abs(dev),1)+'% dari ideal. '+(Z<1?'Gaya tarik antarmolekul dominan (tekanan nyata lebih kecil dari ideal).':'Volume molekul dominan (tekanan nyata lebih besar dari ideal).')+' Model gas ideal kurang tepat.')+(T<Tc?' Catatan: T di bawah suhu kritis, sehingga kurva van der Waals berlekuk (gas dapat mencair).':'');
+}
+
+/* ---------- KALKULATOR ---------- */
+const UN={P:{atm:1,kPa:1/101.325,Pa:1/101325,bar:1/1.01325,mmHg:1/760,torr:1/760},V:{L:1,mL:.001,'m³':1000,'cm³':.001},n:{mol:1,mmol:.001,kmol:1000},T:{K:0,'°C':273.15}};
+const LB={P:'Tekanan P',V:'Volume V',n:'Jumlah n',T:'Suhu T'},BU={P:'atm',V:'L',n:'mol',T:'K'},DEF={P:'1',V:'',n:'1',T:'0'},DU={T:'°C'};
+let cu='V';
+const toB=(v,u,x)=>x==='T'?v+UN.T[u]:v*UN[x][u],fromB=(b,u,x)=>x==='T'?b-UN.T[u]:b/UN[x][u];
+['P','V','n','T'].forEach(x=>{const b=document.createElement('button');b.type='button';b.id='cm_'+x;b.textContent='Cari '+x;b.setAttribute('aria-selected',x==='V');b.onclick=()=>{cu=x;['P','V','n','T'].forEach(y=>$('cm_'+y).setAttribute('aria-selected',y===x));cset();crun()};$('cmodes').appendChild(b)});
+$('cin').innerHTML=['P','V','n','T'].map(x=>`<div class="in"><label for="c_${x}">${LB[x]}</label><input id="c_${x}" type="number" step="any" value="${DEF[x]}"><select id="u_${x}" aria-label="Satuan ${x}">${Object.keys(UN[x]).map(u=>`<option${u===(DU[x]||BU[x])?' selected':''}>${u}</option>`).join('')}</select></div>`).join('');
+['P','V','n','T'].forEach(x=>{$('c_'+x).oninput=crun;$('u_'+x).onchange=crun});
+function cset(){['P','V','n','T'].forEach(x=>{const e=$('c_'+x);e.disabled=x===cu;if(x===cu)e.value='';else if(e.value==='')e.value=DEF[x]||'1'})}
+function crun(){
+ const v={},raw={};let ok=true;
+ ['P','V','n','T'].forEach(x=>{if(x===cu)return;const s=$('c_'+x).value;const n=parseFloat(String(s).replace(',','.'));if(isNaN(n))ok=false;raw[x]=n;v[x]=toB(n,$('u_'+x).value,x)});
+ const o=$('cout');
+ if(!ok){o.innerHTML='Isi ketiga besaran lain dengan angka.';return}
+ for(const x in v)if(!(v[x]>0)){o.innerHTML='<b>Periksa input:</b> '+x+' harus bernilai positif (suhu dalam kelvin &gt; 0).';return}
+ let r,fm,sub;const {P,V,n,T}=v;
+ if(cu==='P'){r=n*R*T/V;fm='P = nRT/V';sub=`(${sig(n)} mol)(0,082057)(${sig(T)} K)/(${sig(V)} L)`}
+ if(cu==='V'){r=n*R*T/P;fm='V = nRT/P';sub=`(${sig(n)} mol)(0,082057)(${sig(T)} K)/(${sig(P)} atm)`}
+ if(cu==='n'){r=P*V/(R*T);fm='n = PV/RT';sub=`(${sig(P)} atm)(${sig(V)} L)/((0,082057)(${sig(T)} K))`}
+ if(cu==='T'){r=P*V/(n*R);fm='T = PV/nR';sub=`(${sig(P)} atm)(${sig(V)} L)/((${sig(n)} mol)(0,082057))`}
+ const u=$('u_'+cu).value,out=fromB(r,u,cu);
+ const conv=['P','V','n','T'].filter(x=>x!==cu).map(x=>x+' = '+sig(v[x])+' '+BU[x]).join('; ');
+ o.innerHTML=`<div>1. Ubah ke satuan R (atm, L, mol, K): ${conv}</div><div>2. Rumus: <span class="f">${fm}</span></div><div>3. Substitusi: <span class="f">${cu} = ${sub} = ${sig(r)} ${BU[cu]}</span></div><div class="big">${cu} = ${sig(out)} ${u}</div>`;
+}
+function num(id){return parseFloat(String($(id).value).replace(',','.'))}
+function mrun(){const m=num('m_m'),P=num('m_P'),V=num('m_V'),T=num('m_T');
+ $('mres').innerHTML=(m>0&&P>0&&V>0&&T>0)?`<div>n = PV/RT = ${sig(P*V/(R*T))} mol</div><div>M = mRT/(PV) = (${sig(m)})(0,08206)(${sig(T)})/((${sig(P)})(${sig(V)}))</div><div class="big">M = ${sig(m*R*T/(P*V))} g/mol</div><div>ρ = m/V = ${sig(m/V)} g/L</div>`:'Isi semua kolom dengan angka positif.'}
+function rrun(){const M=num('r_M'),P=num('r_P'),T=num('r_T');
+ $('rres').innerHTML=(M>0&&P>0&&T>0)?`<div>ρ = PM/RT = (${sig(P)})(${sig(M)})/((0,08206)(${sig(T)}))</div><div class="big">ρ = ${sig(P*M/(R*T))} g/L</div>`:'Isi semua kolom dengan angka positif.'}
+['m_m','m_P','m_V','m_T'].forEach(i=>$(i).oninput=mrun);['r_M','r_P','r_T'].forEach(i=>$(i).oninput=rrun);
+
+/* ---------- ISTILAH ---------- */
+const GLS=[['Gas ideal','Model gas yang taat PV = nRT pada semua P dan T; partikelnya tak bervolume dan tak berinteraksi.'],
+['Tekanan (P)','Gaya per satuan luas akibat tumbukan molekul ke dinding. 1 atm = 101.325 Pa = 760 mmHg.'],
+['Tekanan terukur (gauge)','Tekanan relatif terhadap tekanan atmosfer. Tekanan mutlak = tekanan terukur + tekanan atmosfer.'],
+['Volume (V)','Ruang yang ditempati gas; sama dengan volume wadah. 1 L = 10⁻³ m³.'],
+['Suhu mutlak (T)','Suhu dalam kelvin, T(K) = t(°C) + 273,15. Ukuran energi kinetik rata-rata molekul.'],
+['Mol (n)','Jumlah zat yang mengandung 6,022×10²³ partikel (bilangan Avogadro).'],
+['Konstanta gas (R)','Tetapan universal: 8,314 J/(mol·K) = 0,08206 L·atm/(mol·K).'],
+['Konstanta Boltzmann (k)','R dibagi bilangan Avogadro: 1,381×10⁻²³ J/K.'],
+['Persamaan keadaan','Persamaan yang menghubungkan variabel keadaan zat, misalnya PV = nRT.'],
+['Isoterm, isobar, isokhor','Proses pada suhu, tekanan, atau volume tetap.'],
+['STP dan SATP','Kondisi acuan. STP klasik 273,15 K dan 1 atm; STP IUPAC 273,15 K dan 1 bar; SATP 298,15 K dan 1 bar.'],
+['Volume molar','Volume 1 mol gas; 22,414 L pada 273,15 K dan 1 atm, 24,47 L pada 298,15 K dan 1 atm.'],
+['Tekanan parsial','Tekanan yang diberikan satu komponen jika sendirian menempati wadah yang sama.'],
+['Fraksi mol (x)','Perbandingan mol komponen terhadap mol total.'],
+['Hukum Dalton','Tekanan total campuran gas yang tidak bereaksi sama dengan jumlah tekanan parsial komponennya.'],
+['Efusi','Keluarnya gas melalui lubang sangat kecil ke ruang hampa atau bertekanan lebih rendah.'],
+['Difusi','Bercampurnya gas karena gerak molekul acak; laju juga menurun dengan bertambahnya massa molar.'],
+['Hukum Graham','Laju efusi berbanding terbalik dengan akar massa molar: r₁/r₂ = √(M₂/M₁).'],
+['Tumbukan lenting','Tumbukan yang tidak mengubah energi kinetik total sistem.'],
+['Distribusi Maxwell-Boltzmann','Sebaran laju molekul gas pada suhu tertentu; makin tinggi T, makin lebar dan bergeser ke kanan.'],
+['Laju rms (v_rms)','Akar dari rata-rata kuadrat laju molekul, √(3RT/M).'],
+['Gas nyata','Gas yang menyimpang dari PV = nRT karena adanya gaya antarmolekul dan volume molekul.'],
+['Faktor kompresibilitas (Z)','Z = PV/nRT. Z = 1 untuk gas ideal; Z &lt; 1 dominan gaya tarik, Z &gt; 1 dominan volume molekul.'],
+['Persamaan van der Waals','(P + an²/V²)(V − nb) = nRT, koreksi gas ideal untuk gaya tarik (a) dan volume molekul (b).'],
+['Suhu kritis','Suhu tertinggi di mana gas masih dapat dicairkan dengan menaikkan tekanan.']];
+function grender(){const q=$('gq').value.trim().toLowerCase();
+ $('gl').innerHTML=GLS.filter(g=>!q||(g[0]+' '+g[1]).toLowerCase().includes(q)).map(g=>'<dt>'+g[0]+'</dt><dd>'+g[1]+'</dd>').join('')||'<dd>Tidak ditemukan.</dd>'}
+$('gq').oninput=grender;
+
+/* ---------- MAIN LOOP ---------- */
+let last=performance.now();
+function loop(now){const dt=Math.min(.05,(now-last)/1000);last=now;
+ if(cur==='sim'){drawSim(rm?0:dt);drawGraph()}
+ else if(cur==='mix'){drawMix(rm?0:dt);drawRace(rm?0:dt)}
+ requestAnimationFrame(loop)}
+setMode('free');cset();crun();mrun();rrun();grender();dupd();gupd();
+$('pm').onchange();show('pen');
+requestAnimationFrame(loop);
+</script></body></html>
